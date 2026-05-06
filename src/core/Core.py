@@ -9,7 +9,7 @@ class Core:
         PYG.mixer.init()
         
         flags = PYG.RESIZABLE if RESIZABLE else 0
-        self.screen = PYG.display.set(tuple(SCREEN_SIZE), flags)
+        self.screen = PYG.display.set_mode(tuple(SCREEN_SIZE), flags)
         PYG.display.set_caption(WINDOW_TITLE)
         
         self.clock = PYG.time.Clock()

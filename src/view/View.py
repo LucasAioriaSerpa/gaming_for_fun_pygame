@@ -25,3 +25,17 @@ class View:
         surface = font.render(text, True, color)
         if alpha < 255: surface.set_alpha(alpha)
         rect = surface.get_rect(center=center)
+        self.screen.blit(surface, rect)
+        return rect
+    
+    def draw_rect_aa(
+        self,
+        color,
+        rect: PYG.Rect,
+        border_radius: int = 12,
+        alpha: int = 225,
+    ):
+        surf = PYG.Surface(rect.size, PYG.SRCALPHA)
+        R, G ,B = color[:3]
+        PYG.draw.rect(surf, (R, G, B, alpha), surf.get_rect(), border_radius=border_radius)
+        self.screen.blit(surf, rect.topleft)
