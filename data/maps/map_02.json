@@ -1,0 +1,15 @@
+{
+  "name": "Caverna",
+  "grid": [
+    "XXXXXXXXXXXXXXX",
+    "XXXXE.P.X.....X",
+    "XXXX....X.X...X",
+    "XXXXXX..X.X...X",
+    "XXXXXX....X...X",
+    "XXXXXXX...X.E.X",
+    "XXXXXXXXXXXXXXX"
+  ],
+  "transitions": {
+    "E": "maps/map_01.json"
+  }
+}

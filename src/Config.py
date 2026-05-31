@@ -13,8 +13,9 @@ IMAGES_DIR = _OS_PATH.join(CONTENT_DIR, "images")
 
 SIZE = nTuple("SIZE", "WIDTH HEIGHT")
 
-WINDOW_TITLE  = "JooJ"
+WINDOW_TITLE  = "O JOGO"
 SCREEN_SIZE   = SIZE(1280, 720)
+SCREEN_ZOOM   = (2, 4)
 FPS           = 60
 RESIZABLE     = False
 

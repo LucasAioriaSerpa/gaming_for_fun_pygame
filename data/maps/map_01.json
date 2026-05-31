@@ -1,0 +1,15 @@
+{
+  "name": "Floresta Inicial",
+  "grid": [
+    "XXXXXXXXXXXXXXX",
+    "X.............X",
+    "X......P......X",
+    "X.............X",
+    "X.............X",
+    "X......E......X",
+    "XXXXXXXXXXXXXXX"
+  ],
+  "transitions": {
+    "E": "maps/map_02.json"
+  }
+}
