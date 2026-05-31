@@ -2,6 +2,7 @@
 import pygame as PYG
 from src.Config import WINDOW_TITLE, SCREEN_SIZE, FPS, RESIZABLE, GameState
 from src.controller.Start_screen_controller import StartScreenController
+from src.controller.playing_controller import PlayingController
 
 class Core:
     def __init__(self):
@@ -20,14 +21,25 @@ class Core:
         self._load_controllers()
     
     def _load_controllers(self):
-        self._controllers[GameState.START_SCREEN] = StartScreenController(
-            screen=self.screen,
-            change_state_cb=self.change_state
-        )
+        self._controllers = {
+            GameState.START_SCREEN: StartScreenController(
+                screen=self.screen,
+                change_state_cb=self.change_state
+            ),
+            GameState.PLAYING: PlayingController(
+                screen=self.screen,
+                change_state_cb=self.change_state
+            ) 
+        }
     
     def change_state(self, new_state: str):
         if new_state == GameState.PLAYING and new_state not in self._controllers:
             raise NotImplementedError(f"Controller para '{new_state}' ainda não implementado.")
+        match new_state:
+            case GameState.START_SCREEN:
+                ...
+            case GameState.PLAYING:
+                ...
         self._state = new_state
     
     @property
