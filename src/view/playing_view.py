@@ -4,9 +4,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from collections import namedtuple as nTuple
 import pygame as PYG
+import os
 
 from src.view.View import View
-from src.Config import Colors, SCREEN_SIZE, SCREEN_ZOOM
+from src.Config import Colors, SCREEN_SIZE, SCREEN_ZOOM, IMAGES_DIR
 from src.utils.resource_loader import load_tile
 
 class PlayingView(View):
@@ -18,11 +19,32 @@ class PlayingView(View):
         self.floor_img  = load_tile("tiles_sets/floor.png",  (32, 32))
         self.wall_img   = load_tile("tiles_sets/wall.png",   (32, 32))
         self.door_img   = load_tile("tiles_sets/door.png",   (32, 32))
-        self.player_img = load_tile("player/player.png",     (32, 32))
+        idle_sheet_path = os.path.join(IMAGES_DIR, "player", "player.png")
+        self.idle_sheet = PYG.image.load(idle_sheet_path).convert_alpha()
+        self.idle_frames = {
+            "up":    self.idle_sheet.subsurface(PYG.Rect(32,  0, 32, 32)),
+            "left":  self.idle_sheet.subsurface(PYG.Rect(0,  32, 32, 32)),
+            "down":  self.idle_sheet.subsurface(PYG.Rect(32, 32, 32, 32)),
+            "right": self.idle_sheet.subsurface(PYG.Rect(64, 32, 32 ,32))
+        }
+        self.run_animations = {}
+        directions = ["up", "down", "left", "right"]
+        for d in directions:
+            gif_path = os.path.join(IMAGES_DIR, "player", f"player_walk_{d}.gif")
+            if os.path.exists(gif_path):
+                self.run_animations[d] = list(PYG.image.load_animation(gif_path))
+            else: self.run_animations[d] = [self.idle_frames[d]]
+        self.anim_index = 0
+        self.anim_timer = 0.0
+        self.frame_duration = 0.12
 
-    def update(self):
-        #* animar spritesheet...
-        pass
+    def update(self, delta_time: float, player_model: PlayerModel):
+        if player_model.is_moving:
+            self.anim_timer += delta_time
+            if self.anim_timer >= self.frame_duration:
+                self.anim_timer = 0.0
+                current_anim_list = self.run_animations[player_model.direction]
+                self.anim_index = (self.anim_index + 1) % len(current_anim_list)
 
     def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera):
         self.internal_surf.fill(Colors.BG)
