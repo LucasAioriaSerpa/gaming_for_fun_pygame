@@ -22,14 +22,20 @@ RESIZABLE     = False
 COLOR = nTuple("COLOR", "R G B")
 
 class Colors:
-    BLACK      : type[tuple] = COLOR(0, 0, 0)
-    WHITE      : type[tuple] = COLOR(255, 255, 255)
-    BG         : type[tuple] = COLOR(15, 12,  25)
-    ACCENT     : type[tuple] = COLOR(120, 80, 220)
-    ACCENT2    : type[tuple] = COLOR(60, 200, 160)
-    TEXT       : type[tuple] = COLOR(220, 215, 235)
-    TEXT_DIM   : type[tuple] = COLOR(110, 105, 130)
-    DANGER     : type[tuple] = COLOR(220, 60,  80)
+    BLACK       : type[tuple] = COLOR(  0,   0,   0)
+    WHITE       : type[tuple] = COLOR(255, 255, 255)
+    BG          : type[tuple] = COLOR( 15,  12,  25)
+    ACCENT      : type[tuple] = COLOR(120,  80, 220)
+    ACCENT2     : type[tuple] = COLOR( 60, 200, 160)
+    TEXT        : type[tuple] = COLOR(220, 215, 235)
+    TEXT_DIM    : type[tuple] = COLOR(110, 105, 130)
+    
+    FOX_TIP     : type[tuple] = COLOR(214, 200, 252)
+    FOX_BASE    : type[tuple] = COLOR(250, 151, 109)
+    FOX_PURPLE  : type[tuple] = COLOR(179, 102, 246)
+    FOX_RED_ORG : type[tuple] = COLOR(216,  73,  59)
+    FOX_MAGENTA : type[tuple] = COLOR(176,   1,  73)
+    FOX_OUTLINE : type[tuple] = COLOR(101,   6,  14)
 
 class GameState:
     START_SCREEN = "start_screen"

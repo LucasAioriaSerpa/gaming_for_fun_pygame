@@ -16,8 +16,8 @@ class PlayerModel:
         self.direction = "down"
         self.is_moving = False
         self.wag_timer = 0.0
-        self.num_tail_segments = 8
-        self.tail_segments_length = 3.5
+        self.num_tail_segments = 10
+        self.tail_segments_length = 2.5
         self.tail_points = [[self.pos_x, self.pos_y] for _ in range(self.num_tail_segments)]
     
     def move(self, dx: float, dy: float, delta_time: float, map_model: MapModel):
@@ -43,10 +43,22 @@ class PlayerModel:
         wag_amount = 60.0 if self.is_moving else 15.0
         bias_x, bias_y = 0.0, 0.0
         match self.direction:
-            case "up":      bias_y =  1.0
-            case "down":    bias_y = -1.0
-            case "left":    bias_x =  1.0
-            case "right":   bias_x = -1.0
+            case "up":
+                self.tail_points[0][0] += 0 #* point_X
+                self.tail_points[0][1] += 8 #* point_Y
+                bias_y =  1.0
+            case "down":
+                self.tail_points[0][0] -= 0
+                self.tail_points[0][1] -= 2
+                bias_y = -1.0
+            case "left":
+                self.tail_points[0][0] += 2
+                self.tail_points[0][1] += 2
+                bias_x =  1.0
+            case "right":
+                self.tail_points[0][0] -= 2
+                self.tail_points[0][1] += 2
+                bias_x = -1.0
         for i in range(1, self.num_tail_segments):
             stiffness = 60.0 * delta_time
             self.tail_points[i][0] += bias_x * stiffness

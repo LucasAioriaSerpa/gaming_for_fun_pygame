@@ -1,13 +1,13 @@
 {
   "name": "Caverna",
   "grid": [
-    "XXXXXXXXXXXXXXX",
-    "XXXXE.P.X.....X",
+    "XXXXEXXXXXXXXXX",
+    "XXXXP...X.....X",
     "XXXX....X.X...X",
     "XXXXXX..X.X...X",
     "XXXXXX....X...X",
-    "XXXXXXX...X.E.X",
-    "XXXXXXXXXXXXXXX"
+    "XXXXXXX...X...X",
+    "XXXXXXXXXXXXEXX"
   ],
   "transitions": {
     "E": "maps/map_01.json"
