@@ -39,7 +39,10 @@ class PlayingView(View):
         self.frame_duration = 0.12
 
     def update(self, delta_time: float, player_model: PlayerModel):
-        if player_model.is_moving:
+        if not player_model.is_moving:
+            self.anim_index = 0
+            self._anim_timer = 0.0
+        else:
             self.anim_timer += delta_time
             if self.anim_timer >= self.frame_duration:
                 self.anim_timer = 0.0
@@ -48,15 +51,23 @@ class PlayingView(View):
 
     def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera):
         self.internal_surf.fill(Colors.BG)
-
         offset_x = int(camera.x)
         offset_y = int(camera.y)
-        
+        self._draw_tiles(offset_x, offset_y, map_model)
+        self._draw_tail(offset_x, offset_y, player_model)
+        if player_model.is_moving:
+            current_frame = self.run_animations[player_model.direction][self.anim_index][0]
+        else: current_frame = self.idle_frames[player_model.direction]
+        px = player_model.rect.x - offset_x
+        py = player_model.rect.y - offset_y
+        self.internal_surf.blit(current_frame, (px, py))
+        PYG.transform.scale(self.internal_surf, self.screen.get_size(), self.screen)
+    
+    def _draw_tiles(self, offset_x: int, offset_y: int, map_model: MapModel):
         for row_idx, row in enumerate(map_model.grid):
             for col_idx, tile_type in enumerate(row):
                 x = col_idx * map_model.tile_size - offset_x
                 y = row_idx * map_model.tile_size - offset_y
-                
                 if -32 < x < self.internal_size[0]  and -32 < y < self.internal_size[1]:
                     match tile_type:
                         case "X": self.internal_surf.blit(self.wall_img,  (x, y))
@@ -64,12 +75,29 @@ class PlayingView(View):
                         case "E":
                             self.internal_surf.blit(self.floor_img, (x, y))
                             self.internal_surf.blit(self.door_img, (x, y))
-        
-        px = player_model.rect.x - offset_x
-        py = player_model.rect.y - offset_y
-        self.internal_surf.blit(self.player_img, (px, py))
-        
-        PYG.transform.scale(self.internal_surf, self.screen.get_size(), self.screen)
+    
+    def _draw_tail(self, offset_x: int, offset_y: int, player_model: PlayerModel):
+        COLOR_BASE      = (250, 151, 109)
+        COLOR_TIP       = (214, 200, 252)
+        COLOR_OUTLINE   = (101,   6,  14)
+        #? outline
+        for i, point in enumerate(player_model.tail_points):
+            base_radius = max(0, int(6.5 - i * 0.6)) #* default 6.5 - i * 0.6
+            outline_radius = base_radius + 2
+            tx = int(point[0] - offset_x)
+            ty = int(point[1] - offset_y)
+            PYG.draw.circle(self.internal_surf, COLOR_OUTLINE, (tx, ty), outline_radius)
+        #? outline
+        for i, point in enumerate(player_model.tail_points):
+            base_radius = max(1, int(6.5 - i * 0.6))
+            print(base_radius)
+            tx = int(point[0] - offset_x)
+            ty = int(point[1] - offset_y)
+            if i >= player_model.num_tail_segments - 3:
+                current_color = COLOR_TIP
+            else:
+                current_color = COLOR_BASE
+            PYG.draw.circle(self.internal_surf, current_color, (tx, ty), base_radius)
     
     def player_model_to_screen(self, player_model: PlayerModel) -> tuple[int, int]:
         return (int(player_model.rect.x), int(player_model.rect.y))

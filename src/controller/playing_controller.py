@@ -43,6 +43,13 @@ class PlayingController(Controller):
         if keys[PYG.K_s] or keys[PYG.K_DOWN]:   dy += 1.0
         if keys[PYG.K_a] or keys[PYG.K_LEFT]:   dx -= 1.0
         if keys[PYG.K_d] or keys[PYG.K_RIGHT]:  dx += 1.0
+        if dx != 0.0 or dy != 0.0:
+            self.player_model.is_moving = True
+            if abs(dx) >= abs(dy):
+                self.player_model.direction = "right" if dx > 0 else "left"
+            else:
+                self.player_model.direction = "down" if dy > 0 else "up"
+        else: self.player_model.is_moving = False
         self.player_model.move(dx, dy, delta_time, self.map_model)
         center_x = self.player_model.hitbox.centerx
         center_y = self.player_model.hitbox.centery
@@ -52,6 +59,6 @@ class PlayingController(Controller):
             self.load_map(next_map_filename)
             return
         self.camera.follow(center_x, center_y)
-        self.view.update()
+        self.view.update(delta_time, self.player_model)
     
     def draw(self): self.view.draw(self.player_model, self.map_model, self.camera)
