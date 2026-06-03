@@ -1,0 +1,21 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  padding: 1rem;
+  text-align: center;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  border: 2px solid #333;
+  border-radius: 10px;
+  padding: 1rem;
+  image-rendering: pixelated;
+}

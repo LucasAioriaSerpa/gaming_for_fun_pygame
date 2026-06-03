@@ -1,0 +1,42 @@
+
+[files]
+"../content/images/player/player_walk_down.gif"     = "content/images/player/player_walk_down.gif"
+"../content/images/player/player_walk_left.gif"     = "content/images/player/player_walk_left.gif"
+"../content/images/player/player_walk_right.gif"    = "content/images/player/player_walk_right.gif"
+"../content/images/player/player_walk_up.gif"       = "content/images/player/player_walk_up.gif"
+"../content/images/player/player.png"               = "content/images/player/player.png"
+"../content/images/tiles_sets/floor.png"            = "content/images/tiles_sets/floor.png"
+"../content/images/tiles_sets/wall.png"             = "content/images/tiles_sets/wall.png"
+"../data/maps/map_01.json"  = "data/maps/map_01.json"
+"../data/maps/map_02.json"  = "data/maps/map_02.json"
+
+
+# [[fetch]]
+# "./src.zip" = "./src/*"
+
+[[fetch]]
+from = ".."
+to_folder = "."
+files = [
+    "exe.py",
+    "src/__init__.py",
+    "src/Config.py",
+    "src/controller/__init__.py",
+    "src/controller/playing_controller.py",
+    "src/controller/Start_screen_controller.py",
+    "src/core/__init__.py",
+    "src/core/Controller.py",
+    "src/core/Core.py",
+    "src/model/__init__.py",
+    "src/model/map_model.py",
+    "src/model/player_model.py",
+    "src/utils/__init__.py",
+    "src/utils/camera.py",
+    "src/utils/manager_json.py",
+    "src/utils/math_utils.py",
+    "src/utils/resource_loader.py",
+    "src/view/__init__.py",
+    "src/view/playing_view.py",
+    "src/view/Start_screen_view.py",
+    "src/view/View.py"
+]

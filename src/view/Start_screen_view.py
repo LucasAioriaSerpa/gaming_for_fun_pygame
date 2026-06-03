@@ -34,9 +34,9 @@ class StartScreenView(View):
     def __init__(self, screen: PYG.Surface):
         super().__init__(screen)
         
-        self.font_title = PYG.font.SysFont("consolas", FONT_SIZE_TITLE, bold=True)
-        self.font_btn = PYG.font.SysFont("consolas", FONT_SIZE_LARGE - 10, bold=True)
-        self.font_hint = PYG.font.SysFont("consolas", FONT_SIZE_SMALL)
+        self.font_title = PYG.font.SysFont(None, FONT_SIZE_TITLE, bold=True)
+        self.font_btn = PYG.font.SysFont(None, FONT_SIZE_LARGE - 10, bold=True)
+        self.font_hint = PYG.font.SysFont(None, FONT_SIZE_SMALL)
         
         self._buttons: list[str] = []
         self._hovered: str | None = None

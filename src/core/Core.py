@@ -1,5 +1,7 @@
 
 import pygame as PYG
+import asyncio
+
 from src.Config import WINDOW_TITLE, SCREEN_SIZE, FPS, RESIZABLE, GameState
 from src.controller.Start_screen_controller import StartScreenController
 from src.controller.playing_controller import PlayingController
@@ -45,7 +47,7 @@ class Core:
     @property
     def active_controller(self): return self._controllers.get(self._state)
     
-    def run(self):
+    async def run(self):
         while self.running:
             delta_time = self.clock.tick(FPS) / 1000.0
             
@@ -59,6 +61,7 @@ class Core:
                 self.active_controller.draw()
             
             PYG.display.flip()
+            await asyncio.sleep(0)
         self._quit()
     
     def _quit(self):
