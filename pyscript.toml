@@ -10,10 +10,6 @@
 "../data/maps/map_01.json"  = "data/maps/map_01.json"
 "../data/maps/map_02.json"  = "data/maps/map_02.json"
 
-
-# [[fetch]]
-# "./src.zip" = "./src/*"
-
 [[fetch]]
 from = ".."
 to_folder = "."
