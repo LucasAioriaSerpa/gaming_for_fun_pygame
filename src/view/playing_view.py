@@ -7,7 +7,7 @@ import pygame as PYG
 import os
 
 from src.view.View import View
-from src.Config import Colors, SCREEN_SIZE, SCREEN_ZOOM, IMAGES_DIR
+from src.Config import Colors, SCREEN_SIZE, SCREEN_ZOOM, CONTENT_DIR
 from src.utils.resource_loader import load_tile
 
 class PlayingView(View):
@@ -16,10 +16,10 @@ class PlayingView(View):
         super().__init__(screen)
         self.internal_size = (SCREEN_SIZE.WIDTH/SCREEN_ZOOM[1], SCREEN_SIZE.HEIGHT/SCREEN_ZOOM[1])
         self.internal_surf = PYG.Surface(self.internal_size)
-        self.floor_img  = load_tile("tiles_sets/floor.png",  (32, 32))
-        self.wall_img   = load_tile("tiles_sets/wall.png",   (32, 32))
-        self.door_img   = load_tile("tiles_sets/door.png",   (32, 32))
-        idle_sheet_path = os.path.join(IMAGES_DIR, "player", "player.png")
+        self.floor_img  = load_tile("tiles_sets/test/floor.png",  (32, 32))
+        self.wall_img   = load_tile("tiles_sets/test/wall.png",   (32, 32))
+        self.door_img   = load_tile("tiles_sets/test/door.png",   (32, 32))
+        idle_sheet_path = os.path.join(CONTENT_DIR, "player", "images/player.png")
         self.idle_sheet = PYG.image.load(idle_sheet_path).convert_alpha()
         self.idle_frames = {
             "up":    self.idle_sheet.subsurface(PYG.Rect(32,  0, 32, 32)),
@@ -30,7 +30,7 @@ class PlayingView(View):
         self.run_animations = {}
         directions = ["up", "down", "left", "right"]
         for d in directions:
-            gif_path = os.path.join(IMAGES_DIR, "player", f"player_walk_{d}.gif")
+            gif_path = os.path.join(CONTENT_DIR, "player", f"animations/walk/player_walk_{d}.gif")
             if os.path.exists(gif_path):
                 self.run_animations[d] = list(PYG.image.load_animation(gif_path))
             else: self.run_animations[d] = [self.idle_frames[d]]
@@ -50,7 +50,7 @@ class PlayingView(View):
                 self.anim_index = (self.anim_index + 1) % len(current_anim_list)
 
     def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera):
-        self.internal_surf.fill(Colors.BG)
+        self.internal_surf.fill(Colors.FOX_OUTLINE)
         offset_x = int(camera.x)
         offset_y = int(camera.y)
         #? tiles rendering

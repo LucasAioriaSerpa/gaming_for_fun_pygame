@@ -2,10 +2,10 @@
 import pygame as PYG
 import os
 
-from src.Config import IMAGES_DIR
+from src.Config import CONTENT_DIR
 
 def load_tile(filename: str, size: tuple[int, int] = (32, 32)) -> PYG.Surface:
-    path = os.path.join(IMAGES_DIR, filename)
+    path = os.path.join(CONTENT_DIR, filename)
     try:
         image = PYG.image.load(path).convert_alpha()
         return PYG.transform.scale(image, size)

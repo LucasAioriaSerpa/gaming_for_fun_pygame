@@ -9,7 +9,6 @@ else: ROOT_DIR = _OS_PATH.dirname(_OS_PATH.dirname(_OS_PATH.abspath(__file__)))
 
 DATA_DIR = _OS_PATH.join(ROOT_DIR, "data")
 CONTENT_DIR = _OS_PATH.join(ROOT_DIR, "content")
-IMAGES_DIR = _OS_PATH.join(CONTENT_DIR, "images")
 
 SIZE = nTuple("SIZE", "WIDTH HEIGHT")
 
