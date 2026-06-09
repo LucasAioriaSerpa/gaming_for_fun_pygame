@@ -1,0 +1,23 @@
+{
+  "name": "start_area",
+  "asset_path": "tiles_sets/start_area/start_area.png",
+  "tile_size": 32,
+  "tiles": {
+    "floor_dark": { "grid_x": 0, "grid_y": 0 },
+    "floor_light": { "grid_x": 3, "grid_y": 0 },
+    "grass_patch": { "grid_x": 0, "grid_y": 5 },
+    "abyss": { "grid_x": 1, "grid_y": 1 },
+    "path_vertical": { "grid_x": 8, "grid_y": 0 },
+    "path_cross": { "grid_x": 7, "grid_y": 1 },
+    "tree_top": { "grid_x": 1, "grid_y": 5 },
+    "tree_trunk": { "grid_x": 1, "grid_y": 6 }
+  },
+  "passable": [
+    "floor_dark",
+    "floor_light",
+    "grass_patch",
+    "path_vertical",
+    "path_cross"
+  ],
+  "animated": {}
+}
