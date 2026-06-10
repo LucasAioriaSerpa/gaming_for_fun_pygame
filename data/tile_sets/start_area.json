@@ -5,7 +5,7 @@
   "tiles": {
     "floor_dark": { "grid_x": 0, "grid_y": 0 },
     "floor_light": { "grid_x": 3, "grid_y": 0 },
-    "grass_patch": { "grid_x": 0, "grid_y": 5 },
+    "grass_patch": { "grid_x": 1, "grid_y": 0 },
     "abyss": { "grid_x": 1, "grid_y": 1 },
     "path_vertical": { "grid_x": 8, "grid_y": 0 },
     "path_cross": { "grid_x": 7, "grid_y": 1 },

@@ -15,6 +15,8 @@ class PlayerModel:
         self.speed = 150.0
         self.direction = "down"
         self.is_moving = False
+        self.max_health = 3
+        self.current_health = 3
         self.wag_timer = 0.0
         self.num_tail_segments = 10
         self.tail_segments_length = 2.5

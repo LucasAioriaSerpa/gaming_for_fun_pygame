@@ -19,10 +19,10 @@ class PlayingController(Controller):
         super().__init__(screen, change_state_cb)
         self.view = PlayingView(screen)
         self.camera = Camera(self.view.internal_size[0], self.view.internal_size[1])
-        self.load_map("maps/map_01.json")
+        self.load_map("maps/map_01")
     
-    def load_map(self, filename: str):
-        self.map_model = MapModel(filename=filename, tile_size=32)
+    def load_map(self, map_name: str):
+        self.map_model = MapModel(map_name=map_name, tile_size=32)
         self.player_model = PlayerModel(
             x=self.map_model.spawn_x,
             y=self.map_model.spawn_y,

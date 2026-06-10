@@ -1,42 +1,12 @@
 {
-  "tileset": "start_area",
-  "spawn": { "x": 3, "y": 3 },
+  "meta_image": "start_area/map_01_meta.png",
+  "visual_image": "start_area/map_01_draw.png",
+  "entities_tileset": "start_area",
+  "color_to_entity": {
+    "0,255,255": "tree_top",
+    "255,0,255": "roof_top"
+  },
   "transitions": {
     "19,5": "maps/map_02.json"
-  },
-  "layers": {
-    "ground": [
-      [
-        "floor_light",
-        "floor_light",
-        "floor_light",
-        "floor_light",
-        "floor_light"
-      ],
-      ["floor_light", "floor_dark", "floor_dark", "floor_dark", "floor_light"],
-      ["floor_light", "floor_dark", "grass_patch", "floor_dark", "floor_light"],
-      ["floor_light", "floor_dark", "floor_dark", "floor_dark", "floor_light"],
-      [
-        "floor_light",
-        "floor_light",
-        "floor_light",
-        "floor_light",
-        "floor_light"
-      ]
-    ],
-    "decor_low": [
-      ["none", "none", "none", "none", "none"],
-      ["none", "none", "none", "none", "none"],
-      ["none", "none", "none", "none", "none"],
-      ["none", "none", "none", "none", "none"],
-      ["none", "tree_trunk", "none", "none", "none"]
-    ],
-    "decor_high": [
-      ["none", "none", "none", "none", "none"],
-      ["none", "none", "none", "none", "none"],
-      ["none", "none", "none", "none", "none"],
-      ["none", "tree_top", "none", "none", "none"],
-      ["none", "none", "none", "none", "none"]
-    ]
   }
 }
