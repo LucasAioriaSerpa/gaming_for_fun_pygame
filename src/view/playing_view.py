@@ -46,8 +46,24 @@ class PlayingView(View):
         self.anim_index = 0
         self.anim_timer = 0.0
         self.frame_duration = 0.12
+        self.enemy_anim_states = {}
+        self.enemy_frame_duration = 0.12
+        self.enemy_anims = {
+            "idle": {}, "walk": {}, "attack": {}, "death": {}
+        }
+        enemy_dir = os.path.join(CONTENT_DIR, "enemy")
+        directions = ["up", "down", "left", "right"]
+        for d in directions:
+            path = os.path.join(enemy_dir, "animations", "idle/enemy_idle.gif")
+            if os.path.exists(path): self.enemy_anims["idle"][d] = list(PYG.image.load_animation(path))
+            path = os.path.join(enemy_dir, "animations", "walk/enemy_walk.gif")
+            if os.path.exists(path): self.enemy_anims["walk"][d] = list(PYG.image.load_animation(path))
+            path = os.path.join(enemy_dir, "animations", "attack/enemy_attack.gif")
+            if os.path.exists(path): self.enemy_anims["attack"][d] = list(PYG.image.load_animation(path))
+            path = os.path.join(enemy_dir, "animations", "death/enemy_death.gif")
+            if os.path.exists(path): self.enemy_anims["death"][d] = list(PYG.image.load_animation(path))
 
-    def update(self, delta_time: float, player_model: PlayerModel):
+    def update(self, delta_time: float, player_model: PlayerModel, enemies: list[EnemyModel]):
         if not player_model.is_moving:
             self.anim_index = 0
             self.anim_timer = 0.0
@@ -57,8 +73,30 @@ class PlayingView(View):
                 self.anim_timer = 0.0
                 current_anim_list = self.run_animations[player_model.direction]
                 self.anim_index = (self.anim_index + 1) % len(current_anim_list)
+        for enemy in enemies:
+            enemy_id = id(enemy)
+            if enemy_id not in self.enemy_anim_states:
+                self.enemy_anim_states[enemy_id] = {"index":0,"timer":0.0,"state":enemy.state}
+            state_data = self.enemy_anim_states[enemy_id]
+            if state_data["state"] != enemy.state:
+                state_data["index"] = 0
+                state_data["timer"] = 0.0
+                state_data["state"] = enemy.state
+            state_data["timer"] += delta_time
+            if state_data["timer"] >= self.enemy_frame_duration:
+                state_data["timer"] = 0.0
+                try:
+                    anim_list = self.enemy_anims[enemy.state][enemy.direction]
+                    if enemy.state == "death":
+                        if state_data["index"] < len(anim_list) - 1:
+                            state_data["index"] += 1
+                        else:
+                            enemy.ready_to_remove = True
+                    else:
+                        state_data["index"] = (state_data["index"]+1) & len(anim_list)
+                except KeyError: pass
 
-    def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera):
+    def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera, enemies: list[EnemyModel]):
         self.internal_surf.fill(Colors.FOX_OUTLINE)
         offset_x = int(camera.x)
         offset_y = int(camera.y)
@@ -98,6 +136,17 @@ class PlayingView(View):
             if -tile_size < x < self.internal_size[0] and -tile_size < y < self.internal_size[1]:
                 img_entity = self.entities_cache.get(entity_name)
                 if img_entity: self.internal_surf.blit(img_entity, (x,y))
+        for enemy in enemies:
+            ex = enemy.rect.x - offset_x
+            ey = enemy.rect.y - offset_y
+            if -32 < ex < self.internal_size[0] and -32 < ey < self.internal_size[1]:
+                try:
+                    state_data = self.enemy_anim_states.get(id(enemy))
+                    frame_idx = state_data["index"] if state_data else 0
+                    enemy_frame = self.enemy_anims[enemy.state][enemy.direction][frame_idx][0]
+                    self.internal_surf.blit(enemy_frame, (ex, ey))
+                except (KeyError, IndexError):
+                    PYG.draw.rect(self.internal_surf, (200, 0,0), (ex, ey, 32, 32))
         PYG.transform.scale(self.internal_surf, self.screen.get_size(), self.screen)
         ui_start_x = 20
         ui_start_y = 20

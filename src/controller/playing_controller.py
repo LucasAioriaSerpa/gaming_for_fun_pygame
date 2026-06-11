@@ -5,6 +5,7 @@ import pygame as PYG
 
 from src.core.Controller import Controller
 from src.model.player_model import PlayerModel
+from src.model.enemy_model import EnemyModel
 from src.model.map_model import MapModel
 from src.view.playing_view import PlayingView
 from src.utils.camera import Camera
@@ -19,6 +20,7 @@ class PlayingController(Controller):
         super().__init__(screen, change_state_cb)
         self.view = PlayingView(screen)
         self.camera = Camera(self.view.internal_size[0], self.view.internal_size[1])
+        self.enemies: List[EnemyModel] = []
         self.load_map("maps/map_01")
     
     def load_map(self, map_name: str):
@@ -27,7 +29,10 @@ class PlayingController(Controller):
             x=self.map_model.spawn_x,
             y=self.map_model.spawn_y,
             size=32
-        )        
+        )
+        self.enemies.clear()
+        for ex, ey in self.map_model.enemy_spawns:
+            self.enemies.append(EnemyModel(x=ex * 32, y=ey * 32, size=32))
         self.camera.x = self.player_model.rect.centerx - (self.camera.width / 2)
         self.camera.y = self.player_model.rect.centery - (self.camera.height / 2)
     
@@ -59,6 +64,9 @@ class PlayingController(Controller):
             self.load_map(next_map_filename)
             return
         self.camera.follow(center_x, center_y)
-        self.view.update(delta_time, self.player_model)
+        for enemy in self.enemies:
+            enemy.update(delta_time, self.player_model, self.map_model)
+        self.enemies = [e for e in self.enemies if not e.ready_to_remove]
+        self.view.update(delta_time, self.player_model, self.enemies)
     
-    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera)
+    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera, self.enemies)
