@@ -86,13 +86,19 @@ class PlayingController(Controller):
                 if enemy.state != "death" and proj.hitbox.colliderect(enemy.hitbox):
                     enemy.health -= 1
                     enemy.hit_timer = 0.2
-                    force_knockback = 12.0
+                    force_knockback = 0.5
                     enemy.pos_x += proj.dir_x * force_knockback
                     enemy.pos_y += proj.dir_y * force_knockback
-                    enemy.rect.centerx = int(enemy.pos_x)
-                    enemy.rect.centery = int(enemy.pos_y)
-                    enemy.hitbox.midbottom = enemy.rect.midbottom
+                    enemy.hitbox.centerx = int(enemy.pos_x)
+                    enemy.hitbox.centery = int(enemy.pos_y)
+                    enemy.rect.center = enemy.hitbox.center
                     proj.active = False
+                    print(
+                        enemy.pos_x,
+                        enemy.pos_y,
+                        enemy.hitbox.center,
+                        enemy.rect.center
+                    )
                     break
         self.projectiles = [p for p in self.projectiles if p.active]
         center_x = self.player_model.hitbox.centerx

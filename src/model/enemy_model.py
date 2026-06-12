@@ -23,6 +23,7 @@ class EnemyModel:
         self.ready_to_remove = False
         self.has_dealt_damage = False
         self.hit_timer = 0.0
+
     def update(self, delta_time: float, player: PlayerModel, map_model: MapModel):
         if self.state == "death": return
         if self.health <= 0:

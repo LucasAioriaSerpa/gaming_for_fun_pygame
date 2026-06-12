@@ -3,8 +3,6 @@ import os
 import json
 from src.Config import CONTENT_DIR, DATA_DIR
 
-_TILESET_CACHE: dict[str, dict[str, PYG.Surface]] = {}
-
 def load_tile(filename: str, size: tuple[int, int] = (32, 32)) -> PYG.Surface:
     path = os.path.join(CONTENT_DIR, filename)
     try:

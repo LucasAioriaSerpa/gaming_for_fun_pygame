@@ -56,7 +56,6 @@ class PlayingView(View):
         if os.path.exists(path_attack): self.enemy_anims["attack"] = list(PYG.image.load_animation(path_attack))
         path_death = os.path.join(enemy_dir, "death", "enemy_death.gif")
         if os.path.exists(path_death): self.enemy_anims["death"] = list(PYG.image.load_animation(path_death))
-        print(self.enemy_anims)
 
     def update(self, delta_time: float, player_model: PlayerModel, enemies: list[EnemyModel]):
         if not player_model.is_moving:
