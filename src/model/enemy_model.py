@@ -14,6 +14,8 @@ class EnemyModel:
         self.pos_x = float(self.hitbox.centerx)
         self.pos_y = float(self.hitbox.centery)
         self.speed = 60.0
+        self.vel_x = 0.0
+        self.vel_y = 0.0
         self.health = 3
         self.state = "idle"
         self.detect_range = 150.0
@@ -24,6 +26,17 @@ class EnemyModel:
         self.has_dealt_damage = False
         self.hit_timer = 0.0
 
+    def take_damage(self, amount: int, dir_x: float, dir_y: float, force: float, map_model: MapModel):
+        if self.state == "death": return
+        self.health -= amount
+        self.hit_timer = 0.2
+        if self.health <= 0:
+            self.state = "death"
+            return
+        if force > 0:
+            self.vel_x = dir_x * force * 40.0
+            self.vel_y = dir_y * force * 40.0
+    
     def update(self, delta_time: float, player: PlayerModel, map_model: MapModel):
         if self.state == "death": return
         if self.health <= 0:
@@ -33,6 +46,13 @@ class EnemyModel:
             self.attack_timer -= delta_time
         if self.hit_timer > 0:
             self.hit_timer -= delta_time
+        if abs(self.vel_x) > 5.0 or abs(self.vel_y) > 5.0:
+            self._apply_velocity(self.vel_x, self.vel_y, delta_time, map_model)
+            friction = 8.0 * delta_time
+            self.vel_x -= self.vel_x * friction
+            self.vel_y -= self.vel_y * friction
+            return
+        else: self.vel_x, self.vel_y = 0.0, 0.0
         dx = player.hitbox.centerx - self.hitbox.centerx
         dy = player.hitbox.centery - self.hitbox.centery
         distance = math.hypot(dx, dy)
@@ -51,26 +71,31 @@ class EnemyModel:
             if self.state == "attack" and self.attack_timer > self.attack_cooldown - 0.5: 
                 pass
             else:
-                self.state = "walk"
+                self.state = "walk" 
                 self._move(dx, dy, distance, delta_time, map_model)
         else:
             self.state = "idle"
+
+    def _apply_velocity(self, vx: float, vy: float, delta_time: float, map_model: MapModel):
+        self.pos_x += vx * delta_time
+        self.hitbox.centerx = int(self.pos_x)
+        if self._check_collision(map_model):
+            self.pos_x -= vx * delta_time
+            self.hitbox.centerx = int(self.pos_x)
+        self.pos_y += vy * delta_time
+        self.hitbox.centery = int(self.pos_y)
+        if self._check_collision(map_model):
+            self.pos_y -= vy * delta_time
+            self.hitbox.centery = int(self.pos_y)
+        self.rect.center = self.hitbox.center
 
     def _move(self, dx: float, dy: float, distance: float, delta_time: float, map_model: MapModel):
         if distance == 0: return
         norm_dx = dx / distance
         norm_dy = dy / distance
-        self.pos_x += norm_dx * self.speed * delta_time
-        self.hitbox.centerx = int(self.pos_x)
-        if self._check_collision(map_model):
-            self.pos_x -= norm_dx * self.speed * delta_time
-            self.hitbox.centerx = int(self.pos_x)
-        self.pos_y += norm_dy * self.speed * delta_time
-        self.hitbox.centery = int(self.pos_y)
-        if self._check_collision(map_model):
-            self.pos_y -= norm_dy * self.speed * delta_time
-            self.hitbox.centery = int(self.pos_y)
-        self.rect.center = self.hitbox.center
+        vx = norm_dx * self.speed
+        vy = norm_dy * self.speed
+        self._apply_velocity(vx, vy, delta_time, map_model)
 
     def _check_collision(self, map_model: MapModel) -> bool:
         corners = [

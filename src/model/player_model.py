@@ -12,11 +12,12 @@ class PlayerModel:
         self.hitbox.midbottom = self.rect.midbottom
         self.pos_x = float(self.hitbox.centerx)
         self.pos_y = float(self.hitbox.centery)
-        self.speed = 150.0
+        self.speed = 100.0
         self.direction = "down"
         self.is_moving = False
         self.max_health = 3
         self.current_health = 3
+        self.is_dead = False
         self.invulnerable_timer = 0.0
         self.attack_cooldown = 0.4
         self.attack_timer = 0.0
@@ -24,6 +25,13 @@ class PlayerModel:
         self.num_tail_segments = 10
         self.tail_segments_length = 2.5
         self.tail_points = [[self.pos_x, self.pos_y] for _ in range(self.num_tail_segments)]
+    
+    def check_health(self) -> bool:
+        if self.current_health <= 0:
+            self.current_health = 0
+            self.is_dead = True
+            return True
+        return False
     
     def take_damage(self, amount: int):
         if self.invulnerable_timer <= 0:

@@ -12,6 +12,7 @@ class MapModel:
         self.collision_grid = []
         self.transitions = {}
         self.enemy_spawns = []
+        self.npc_spawns = []
         self.item_spawns = []
         self.overhead_entities = []
         self.spawn_x = 0.0
@@ -30,7 +31,7 @@ class MapModel:
         self.visual_image_path = data.get("visual_image")
         self.entities_tileset = data.get("entities_tileset", "start_area")
         self.color_to_entity = data.get("color_to_entity", {})
-        self.transitions_targets = data.get("transitions", {})
+        self.transitions_targets = data.get("transitions", [])
         self._parse_meta_image(meta_image_path)
 
     def _parse_meta_image(self, meta_filename: str):
@@ -69,8 +70,11 @@ class MapModel:
                             case (255,  0,  0): 
                                 self.enemy_spawns.append((x,y))     #? VERMELHO: Inimigo
                             case (  0,  0,255):                     #? AZUL: Transição
-                                pass
+                                coord_key = f"{x},{y}"
+                                self.transitions[coord_key] = self.transitions_targets[0]
                             case (255,255,  0):                     #? AMARELO: Item
+                                self.item_spawns.append((x,y))
+                            case (255,255,0):
                                 self.item_spawns.append((x,y))
         except FileNotFoundError:
             print(f"[MapModel] Erro: Imagem de meta-dados '{meta_filename}' não encontrada.")

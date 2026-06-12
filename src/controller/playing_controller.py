@@ -2,12 +2,14 @@
 from __future__ import annotations
 from typing import Callable, List
 import pygame as PYG
+import math
 
 from src.Config import GameState, SCREEN_ZOOM
 from src.core.Controller import Controller
 from src.view.playing_view import PlayingView
 from src.model.player_model import PlayerModel
 from src.model.enemy_model import EnemyModel
+from src.model.npc_model import NPCModel
 from src.model.projectile_mode import ProjectileModel
 from src.model.map_model import MapModel
 from src.utils.math_utils import normalize_vector
@@ -23,10 +25,16 @@ class PlayingController(Controller):
         self.view = PlayingView(screen)
         self.camera = Camera(self.view.internal_size[0], self.view.internal_size[1])
         self.enemies: List[EnemyModel] = []
-        self.projectiles = []
+        self.npcs: List[NPCModel] = []
+        self.projectiles: List[ProjectileModel] = []
         self.load_map("maps/map_01")
     
+    def on_enter(self): self.__init__(self.screen, self.change_state)
+    
+    def trigger_game_over(self): self.change_state(GameState.GAME_OVER)
+    
     def load_map(self, map_name: str):
+        self.projectiles.clear()
         self.map_model = MapModel(map_name=map_name, tile_size=32)
         self.player_model = PlayerModel(
             x=self.map_model.spawn_x,
@@ -36,13 +44,30 @@ class PlayingController(Controller):
         self.enemies.clear()
         for ex, ey in self.map_model.enemy_spawns:
             self.enemies.append(EnemyModel(x=ex * 32, y=ey * 32, size=32))
+        self.npcs.clear()
+        for nx, ny in self.map_model.npc_spawns:
+            self.npcs.append(NPCModel(x=nx * 32, y=ny * 32, size=32))
         self.camera.x = self.player_model.rect.centerx - (self.camera.width / 2)
         self.camera.y = self.player_model.rect.centery - (self.camera.height / 2)
     
     def handle_events(self, events: List[PYG.event.Event]):
         for event in events:
+            match event.type:
+                case PYG.KEYDOWN:
+                    match event.key:
+                        case PYG.K_ESCAPE:
+                            self.change_state(GameState.START_SCREEN)
+                        case PYG.K_e:
+                            for npc in self.npcs:
+                                dx = self.player_model.hitbox.centerx - npc.hitbox.centerx
+                                dy = self.player_model.hitbox.centery - npc.hitbox.centery
+                                distance = math.hypot(dx, dy)
+                                if distance <= 50.0:
+                                    npc.interact()
+                                    break
             if event.type == PYG.KEYDOWN and event.key == PYG.K_ESCAPE:
                 self.change_state(GameState.START_SCREEN)
+            
 
     def update(self, delta_time: float): 
         keys = PYG.key.get_pressed()
@@ -76,6 +101,8 @@ class PlayingController(Controller):
                     )
                     self.projectiles.append(new_proj)
                     self.player_model.attack_timer = self.player_model.attack_cooldown
+        if hasattr(self.player_model, "current_health") and self.player_model.current_health <= 0: 
+            self.trigger_game_over()
         for proj in self.projectiles:
             proj.update(delta_time)
             grid_x, grid_y = int(proj.x // 32), int(proj.y // 32)
@@ -84,21 +111,14 @@ class PlayingController(Controller):
                 continue
             for enemy in self.enemies:
                 if enemy.state != "death" and proj.hitbox.colliderect(enemy.hitbox):
-                    enemy.health -= 1
-                    enemy.hit_timer = 0.2
-                    force_knockback = 0.5
-                    enemy.pos_x += proj.dir_x * force_knockback
-                    enemy.pos_y += proj.dir_y * force_knockback
-                    enemy.hitbox.centerx = int(enemy.pos_x)
-                    enemy.hitbox.centery = int(enemy.pos_y)
-                    enemy.rect.center = enemy.hitbox.center
-                    proj.active = False
-                    print(
-                        enemy.pos_x,
-                        enemy.pos_y,
-                        enemy.hitbox.center,
-                        enemy.rect.center
+                    enemy.take_damage(
+                        amount=1,
+                        dir_x=proj.dir_x,
+                        dir_y=proj.dir_y,
+                        force=0.5,
+                        map_model=self.map_model
                     )
+                    proj.active = False
                     break
         self.projectiles = [p for p in self.projectiles if p.active]
         center_x = self.player_model.hitbox.centerx
@@ -114,4 +134,4 @@ class PlayingController(Controller):
         self.enemies = [e for e in self.enemies if not e.ready_to_remove]
         self.view.update(delta_time, self.player_model, self.enemies)
 
-    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera, self.enemies, self.projectiles)
+    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera, self.enemies, self.projectiles, self.npcs)

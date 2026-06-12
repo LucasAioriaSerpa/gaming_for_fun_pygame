@@ -1,15 +1,10 @@
 {
-  "name": "Caverna",
-  "grid": [
-    "XXXXEXXXXXXXXXX",
-    "XXXXP...X.....X",
-    "XXXX....X.X...X",
-    "XXXXXX..X.X...X",
-    "XXXXXX....X...X",
-    "XXXXXXX...X...X",
-    "XXXXXXXXXXXXEXX"
-  ],
-  "transitions": {
-    "E": "maps/map_01.json"
-  }
+  "meta_image": "start_area/map_02_meta.png",
+  "visual_image": "start_area/map_02_draw.png",
+  "entities_tileset": "start_area",
+  "color_to_entity": {
+    "0,255,255": "tree_top",
+    "255,0,255": "roof_top"
+  },
+  "transitions": ["maps/map_01"]
 }

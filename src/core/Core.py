@@ -4,7 +4,8 @@ import asyncio
 
 from src.Config import WINDOW_TITLE, SCREEN_SIZE, FPS, RESIZABLE, GameState
 from src.controller.Start_screen_controller import StartScreenController
-from src.controller.playing_controller import PlayingController
+from src.controller.playing_controller      import PlayingController
+from src.controller.game_over_controller    import GameOverController
 
 class Core:
     def __init__(self):
@@ -31,18 +32,20 @@ class Core:
             GameState.PLAYING: PlayingController(
                 screen=self.screen,
                 change_state_cb=self.change_state
-            ) 
+            ),
+            GameState.GAME_OVER: GameOverController(
+                screen=self.screen,
+                change_state_cb=self.change_state
+            )
         }
     
     def change_state(self, new_state: str):
         if new_state == GameState.PLAYING and new_state not in self._controllers:
             raise NotImplementedError(f"Controller para '{new_state}' ainda não implementado.")
-        match new_state:
-            case GameState.START_SCREEN:
-                ...
-            case GameState.PLAYING:
-                ...
         self._state = new_state
+        controller = self.active_controller
+        if controller and hasattr(controller, "on_enter"):
+            controller.on_enter()
     
     @property
     def active_controller(self): return self._controllers.get(self._state)
@@ -55,10 +58,12 @@ class Core:
             for event in events:
                 if event.type == PYG.QUIT: self.running = False
             
-            if self.active_controller:
-                self.active_controller.handle_events(events)
-                self.active_controller.update(delta_time)
-                self.active_controller.draw()
+            current_controller = self.active_controller
+            
+            if current_controller:
+                current_controller.handle_events(events)
+                current_controller.update(delta_time)
+                current_controller.draw()
             
             PYG.display.flip()
             await asyncio.sleep(0)

@@ -56,6 +56,10 @@ class PlayingView(View):
         if os.path.exists(path_attack): self.enemy_anims["attack"] = list(PYG.image.load_animation(path_attack))
         path_death = os.path.join(enemy_dir, "death", "enemy_death.gif")
         if os.path.exists(path_death): self.enemy_anims["death"] = list(PYG.image.load_animation(path_death))
+        self.flash_cache = {}
+        self.heart_scale_size = None
+        self.heart_full_scaled = None
+        self.heart_empty_scaled = None
 
     def update(self, delta_time: float, player_model: PlayerModel, enemies: list[EnemyModel]):
         if not player_model.is_moving:
@@ -67,6 +71,9 @@ class PlayingView(View):
                 self.anim_timer = 0.0
                 current_anim_list = self.run_animations[player_model.direction]
                 self.anim_index = (self.anim_index + 1) % len(current_anim_list)
+        active_enemy_ids = {id(enemy) for enemy in enemies}
+        keys_to_remove = [e_id for e_id in self.enemy_anim_states if e_id not in active_enemy_ids]
+        for e_id in keys_to_remove: del self.enemy_anim_states[e_id]
         for enemy in enemies:
             enemy_id = id(enemy)
             if enemy_id not in self.enemy_anim_states:
@@ -88,7 +95,7 @@ class PlayingView(View):
                     else:
                         state_data["index"] = (state_data["index"] + 1) % len(anim_list)
 
-    def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera, enemies: list[EnemyModel], projectiles: list[ProjectileModel]):
+    def draw(self, player_model: PlayerModel, map_model: MapModel, camera: Camera, enemies: list[EnemyModel], projectiles: list[ProjectileModel], npcs: list[NPCModel]):
         self.internal_surf.fill(Colors.BG)
         offset_x = int(camera.x)
         offset_y = int(camera.y)
@@ -114,11 +121,8 @@ class PlayingView(View):
         if player_model.invulnerable_timer > 0:
             if int(player_model.invulnerable_timer * 10) % 2 == 0:
                 render_player = False
-        if render_player:    
-            if player_model.is_moving:
-                current_frame = self.run_animations[player_model.direction][self.anim_index][0]
-            else: 
-                current_frame = self.idle_frames[player_model.direction]
+        if render_player:
+            current_frame = self.run_animations[player_model.direction][self.anim_index][0] if player_model.is_moving else self.idle_frames[player_model.direction]
             px = player_model.rect.x - offset_x
             py = player_model.rect.y - offset_y
             if player_model.direction == "up":
@@ -128,10 +132,9 @@ class PlayingView(View):
                 self._draw_tail(player_model, offset_x, offset_y)
                 self.internal_surf.blit(current_frame, (px, py))
         for proj in projectiles:
-            tx = int(proj.x - offset_x)
-            ty = int(proj.y - offset_y)
+            tx, ty = int(proj.x - offset_x), int(proj.y - offset_y)
             PYG.draw.circle(self.internal_surf, (214,200,252), (tx, ty), 6)
-            PYG.draw.circle(self.internal_surf, (179, 102,246), (tx,ty), 8, 2)
+            PYG.draw.circle(self.internal_surf, (179,102,246), (tx,ty), 8, 2)
         for entity_name, grid_x, grid_y in map_model.overhead_entities:
             x = grid_x * tile_size - offset_x
             y = grid_y * tile_size - offset_y
@@ -148,25 +151,40 @@ class PlayingView(View):
                 if anim_list and frame_idx < len(anim_list):
                     enemy_frame = anim_list[frame_idx][0]
                     if getattr(enemy, "hit_timer", 0) > 0:
-                        flash_frame = enemy_frame.copy()
-                        flash_frame.fill((255,50,50), special_flags=PYG.BLEND_RGB_MULT)
-                        self.internal_surf.blit(flash_frame, (ex, ey))
+                        frame_id = id(enemy_frame)
+                        if frame_id not in self.flash_cache:
+                            flash_frame = enemy_frame.copy()
+                            flash_frame.fill((255,50,50, 255), special_flags=PYG.BLEND_RGB_MULT)
+                            self.flash_cache[frame_id] = flash_frame
+                        self.internal_surf.blit(self.flash_cache[frame_id], (ex, ey))
                     else:
                         self.internal_surf.blit(enemy_frame, (ex, ey))
                 else:
                     PYG.draw.rect(self.internal_surf, (200, 0, 0), (ex, ey, 32, 32))
+        for npc in npcs:
+            nx = npc.rect.x - offset_x
+            ny = npc.recy.y - offset_y
+            if -32 < nx < self.internal_size[0] and -32 < ny < self.internal_size[1]:
+                PYG.draw.rect(self.internal_surf, (255,0,255), (nx, ny, 32, 32))
+                if npc.is_interacting:
+                    PYG.draw.rect(self.internal_surf, (255,255,255), (nx - 10, ny - 20, 50, 15), border_radius=5)
         PYG.transform.scale(self.internal_surf, self.screen.get_size(), self.screen)
-        ui_start_x = 20
-        ui_start_y = 20
+        ui_start_x, ui_start_y = 20, 20
         scale_heart = tile_size * 4
-        size_heart = (scale_heart, scale_heart)
+        if self.heart_scale_size != scale_heart:
+            self.heart_scale_size = scale_heart
+            size_heart = (scale_heart, scale_heart)
+            self.heart_full_scaled = PYG.transform.scale(self.heart_full, size_heart)
+            self.heart_empty_scaled = PYG.transform.scale(self.heart_empty, size_heart)
         spacing = scale_heart + 2
         for i in range(player_model.max_health):
             heart_x = ui_start_x + (i * spacing)
             if i < player_model.current_health:
-                self.screen.blit(PYG.transform.scale(self.heart_full, size_heart), (heart_x, ui_start_y))
+                self.screen.blit(self.heart_full_scaled, (heart_x, ui_start_y))
             else:
-                self.screen.blit(PYG.transform.scale(self.heart_empty, size_heart), (heart_x, ui_start_y))
+                self.screen.blit(self.heart_empty_scaled, (heart_x, ui_start_y))
+
+    def _get_tail_radius(self, i: int) -> int: return max(1, int(5.5 - i * 0.5))
 
     def _draw_tail(self, player_model: PlayerModel, offset_x: int, offset_y: int):
         radius_func = lambda i: max(1, int(5.5 - i * 0.5))

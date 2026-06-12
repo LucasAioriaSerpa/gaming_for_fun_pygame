@@ -6,7 +6,5 @@
     "0,255,255": "tree_top",
     "255,0,255": "roof_top"
   },
-  "transitions": {
-    "19,5": "maps/map_02.json"
-  }
+  "transitions": ["maps/map_02"]
 }
