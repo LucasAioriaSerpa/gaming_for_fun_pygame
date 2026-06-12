@@ -17,10 +17,24 @@ class PlayerModel:
         self.is_moving = False
         self.max_health = 3
         self.current_health = 3
+        self.invulnerable_timer = 0.0
+        self.attack_cooldown = 0.4
+        self.attack_timer = 0.0
         self.wag_timer = 0.0
         self.num_tail_segments = 10
         self.tail_segments_length = 2.5
         self.tail_points = [[self.pos_x, self.pos_y] for _ in range(self.num_tail_segments)]
+    
+    def take_damage(self, amount: int):
+        if self.invulnerable_timer <= 0:
+            self.current_health -= amount
+            self.invulnerable_timer = 1.0
+            
+    def update_timers(self, delta_time: float):
+        if self.invulnerable_timer > 0:
+            self.invulnerable_timer -= delta_time
+        if self.attack_timer > 0:
+            self.attack_timer -= delta_time
     
     def move(self, dx: float, dy: float, delta_time: float, map_model: MapModel):
         norm_dx, norm_dy = normalize_vector(dx, dy)

@@ -16,12 +16,13 @@ class EnemyModel:
         self.speed = 60.0
         self.health = 3
         self.state = "idle"
-        self.direction = "down"
-        self.detect_range = 250.0
+        self.detect_range = 150.0
         self.attack_range = 40.0
         self.attack_cooldown = 1.5
         self.attack_timer = 0.0
         self.ready_to_remove = False
+        self.has_dealt_damage = False
+        self.hit_timer = 0.0
     def update(self, delta_time: float, player: PlayerModel, map_model: MapModel):
         if self.state == "death": return
         if self.health <= 0:
@@ -29,6 +30,8 @@ class EnemyModel:
             return
         if self.attack_timer > 0: 
             self.attack_timer -= delta_time
+        if self.hit_timer > 0:
+            self.hit_timer -= delta_time
         dx = player.hitbox.centerx - self.hitbox.centerx
         dy = player.hitbox.centery - self.hitbox.centery
         distance = math.hypot(dx, dy)
@@ -36,24 +39,26 @@ class EnemyModel:
             if self.attack_timer <= 0:
                 self.state = "attack"
                 self.attack_timer = self.attack_cooldown
-                self._update_direction(dx, dy)
+                self.has_dealt_damage = False
+            if self.state == "attack" and not self.has_dealt_damage:
+                time_elapsed = self.attack_cooldown - self.attack_timer
+                if time_elapsed >= 0.72:
+                    self.has_dealt_damage = True
+                    if distance <= self.attack_range + 15:
+                        player.take_damage(1)
         elif distance <= self.detect_range:
-            if self.state == "attack" and self.attack_timer > self.attack_cooldown - 0.5: pass
+            if self.state == "attack" and self.attack_timer > self.attack_cooldown - 0.5: 
+                pass
             else:
                 self.state = "walk"
-                self._move(dx, dy, delta_time, map_model)
-                self._update_direction(dx, dy)
+                self._move(dx, dy, distance, delta_time, map_model)
         else:
             self.state = "idle"
-    
-    def _update_direction(self, dx: float, dy: float):
-        if abs(dx) >= abs(dy):
-            self.direction = "right" if dx > 0 else "left"
-        else:
-            self.direction = "down" if dy > 0 else "up"
-    
-    def _move(self, dx: float, dy: float, delta_time: float, map_model: MapModel):
-        norm_dx, norm_dy = normalize_vector(dx, dy)
+
+    def _move(self, dx: float, dy: float, distance: float, delta_time: float, map_model: MapModel):
+        if distance == 0: return
+        norm_dx = dx / distance
+        norm_dy = dy / distance
         self.pos_x += norm_dx * self.speed * delta_time
         self.hitbox.centerx = int(self.pos_x)
         if self._check_collision(map_model):

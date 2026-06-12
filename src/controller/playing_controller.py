@@ -3,13 +3,15 @@ from __future__ import annotations
 from typing import Callable, List
 import pygame as PYG
 
+from src.Config import GameState, SCREEN_ZOOM
 from src.core.Controller import Controller
+from src.view.playing_view import PlayingView
 from src.model.player_model import PlayerModel
 from src.model.enemy_model import EnemyModel
+from src.model.projectile_mode import ProjectileModel
 from src.model.map_model import MapModel
-from src.view.playing_view import PlayingView
+from src.utils.math_utils import normalize_vector
 from src.utils.camera import Camera
-from src.Config import GameState
 
 class PlayingController(Controller):
     def __init__(
@@ -21,6 +23,7 @@ class PlayingController(Controller):
         self.view = PlayingView(screen)
         self.camera = Camera(self.view.internal_size[0], self.view.internal_size[1])
         self.enemies: List[EnemyModel] = []
+        self.projectiles = []
         self.load_map("maps/map_01")
     
     def load_map(self, map_name: str):
@@ -56,6 +59,42 @@ class PlayingController(Controller):
                 self.player_model.direction = "down" if dy > 0 else "up"
         else: self.player_model.is_moving = False
         self.player_model.move(dx, dy, delta_time, self.map_model)
+        self.player_model.update_timers(delta_time)
+        if PYG.mouse.get_pressed()[0]:
+            if self.player_model.attack_timer <= 0:
+                mx, my = PYG.mouse.get_pos()
+                world_x = (mx / SCREEN_ZOOM[1]) + self.camera.x
+                world_y = (my / SCREEN_ZOOM[1]) + self.camera.y
+                dir_x = world_x - self.player_model.hitbox.centerx
+                dir_y = world_y - self.player_model.hitbox.centery
+                norm_dx, norm_dy = normalize_vector(dir_x, dir_y)
+                if norm_dx != 0 or norm_dy != 0:
+                    new_proj = ProjectileModel(
+                        self.player_model.hitbox.centerx,
+                        self.player_model.hitbox.centery,
+                        norm_dx, norm_dy
+                    )
+                    self.projectiles.append(new_proj)
+                    self.player_model.attack_timer = self.player_model.attack_cooldown
+        for proj in self.projectiles:
+            proj.update(delta_time)
+            grid_x, grid_y = int(proj.x // 32), int(proj.y // 32)
+            if self.map_model.is_wall(grid_x, grid_y):
+                proj.active = False
+                continue
+            for enemy in self.enemies:
+                if enemy.state != "death" and proj.hitbox.colliderect(enemy.hitbox):
+                    enemy.health -= 1
+                    enemy.hit_timer = 0.2
+                    force_knockback = 12.0
+                    enemy.pos_x += proj.dir_x * force_knockback
+                    enemy.pos_y += proj.dir_y * force_knockback
+                    enemy.rect.centerx = int(enemy.pos_x)
+                    enemy.rect.centery = int(enemy.pos_y)
+                    enemy.hitbox.midbottom = enemy.rect.midbottom
+                    proj.active = False
+                    break
+        self.projectiles = [p for p in self.projectiles if p.active]
         center_x = self.player_model.hitbox.centerx
         center_y = self.player_model.hitbox.centery
         current_tile = self.map_model.get_tile_at(center_x, center_y)
@@ -68,5 +107,5 @@ class PlayingController(Controller):
             enemy.update(delta_time, self.player_model, self.map_model)
         self.enemies = [e for e in self.enemies if not e.ready_to_remove]
         self.view.update(delta_time, self.player_model, self.enemies)
-    
-    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera, self.enemies)
+
+    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera, self.enemies, self.projectiles)
