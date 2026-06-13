@@ -12,7 +12,7 @@ CONTENT_DIR = _OS_PATH.join(ROOT_DIR, "content")
 
 SIZE = nTuple("SIZE", "WIDTH HEIGHT")
 
-WINDOW_TITLE  = "O JOGO"
+WINDOW_TITLE  = "The Fall"
 SCREEN_SIZE   = SIZE(1280, 720)
 SCREEN_ZOOM   = (2, 4)
 FPS           = 60

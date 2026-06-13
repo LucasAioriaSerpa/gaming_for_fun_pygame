@@ -49,12 +49,12 @@ class PlayingView(View):
         self.enemy_anims = { "idle": [], "walk": [], "attack": [], "death": [] }
         enemy_dir = os.path.join(CONTENT_DIR, "enemy", "animations")
         path_idle = os.path.join(enemy_dir, "idle", "enemy_idle.gif")
-        if os.path.exists(path_idle): self.enemy_anims["idle"] = list(PYG.image.load_animation(path_idle))
         path_walk = os.path.join(enemy_dir, "walk", "enemy_walk.gif")
-        if os.path.exists(path_walk): self.enemy_anims["walk"] = list(PYG.image.load_animation(path_walk))
         path_attack = os.path.join(enemy_dir, "attack", "enemy_attack.gif")
-        if os.path.exists(path_attack): self.enemy_anims["attack"] = list(PYG.image.load_animation(path_attack))
         path_death = os.path.join(enemy_dir, "death", "enemy_death.gif")
+        if os.path.exists(path_walk): self.enemy_anims["walk"] = list(PYG.image.load_animation(path_walk))
+        if os.path.exists(path_idle): self.enemy_anims["idle"] = list(PYG.image.load_animation(path_idle))
+        if os.path.exists(path_attack): self.enemy_anims["attack"] = list(PYG.image.load_animation(path_attack))
         if os.path.exists(path_death): self.enemy_anims["death"] = list(PYG.image.load_animation(path_death))
         self.flash_cache = {}
         self.heart_scale_size = None
@@ -163,9 +163,9 @@ class PlayingView(View):
                     PYG.draw.rect(self.internal_surf, (200, 0, 0), (ex, ey, 32, 32))
         for npc in npcs:
             nx = npc.rect.x - offset_x
-            ny = npc.recy.y - offset_y
+            ny = npc.rect.y - offset_y
             if -32 < nx < self.internal_size[0] and -32 < ny < self.internal_size[1]:
-                PYG.draw.rect(self.internal_surf, (255,0,255), (nx, ny, 32, 32))
+                #*PYG.draw.rect(self.internal_surf, (255,0,255), (nx, ny, 32, 32))
                 if npc.is_interacting:
                     PYG.draw.rect(self.internal_surf, (255,255,255), (nx - 10, ny - 20, 50, 15), border_radius=5)
         PYG.transform.scale(self.internal_surf, self.screen.get_size(), self.screen)

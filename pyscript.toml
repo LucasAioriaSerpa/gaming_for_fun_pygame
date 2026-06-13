@@ -1,12 +1,22 @@
 
 [files]
-"../content/images/player/player_walk_down.gif"     = "content/images/player/player_walk_down.gif"
-"../content/images/player/player_walk_left.gif"     = "content/images/player/player_walk_left.gif"
-"../content/images/player/player_walk_right.gif"    = "content/images/player/player_walk_right.gif"
-"../content/images/player/player_walk_up.gif"       = "content/images/player/player_walk_up.gif"
-"../content/images/player/player.png"               = "content/images/player/player.png"
-"../content/images/tiles_sets/floor.png"            = "content/images/tiles_sets/floor.png"
-"../content/images/tiles_sets/wall.png"             = "content/images/tiles_sets/wall.png"
+"../content/enemy/animations/attack/enemy_attack.gif"       = "content/enemy/animations/attack/enemy_attack.gif"
+"../content/enemy/animations/death/enemy_death.gif"         = "content/enemy/animations/death/enemy_death.gif"
+"../content/enemy/animations/idle/enemy_idle.gif"           = "content/enemy/animations/idle/enemy_idle.gif"
+"../content/enemy/animations/walk/enemy_walk.gif"           = "content/enemy/animations/walk/enemy_walk.gif"
+"../content/interfaces/heart/heart_spreedsheet.png"         = "content/interfaces/heart/heart_spreedsheet.png"
+"../content/maps/start_area/tile_set/start_area.png"        = "content/maps/start_area/tile_set/start_area.png"
+"../content/maps/start_area/map_01_draw.png"                = "content/maps/start_area/map_01_draw.png"
+"../content/maps/start_area/map_01_meta.png"                = "content/maps/start_area/map_01_meta.png"
+"../content/maps/start_area/map_02_draw.png"                = "content/maps/start_area/map_02_draw.png"
+"../content/maps/start_area/map_02_meta.png"                = "content/maps/start_area/map_02_meta.png"
+"../content/player/animations/walk/player_walk_down.gif"    = "content/player/animations/walk/player_walk_down.gif"
+"../content/player/animations/walk/player_walk_left.gif"    = "content/player/animations/walk/player_walk_left.gif"
+"../content/player/animations/walk/player_walk_right.gif"   = "content/player/animations/walk/player_walk_right.gif"
+"../content/player/animations/walk/player_walk_up.gif"      = "content/player/animations/walk/player_walk_up.gif"
+"../content/player/images/player.png"                       = "content/player/images/player.png"
+"../content/maps/test/tile_set/floor.png"                 = "content/maps/test/tile_set/floor.png"
+"../content/maps/test/tile_set/wall.png"                  = "content/maps/test/tile_set/wall.png"
 "../data/maps/map_01.json"  = "data/maps/map_01.json"
 "../data/maps/map_02.json"  = "data/maps/map_02.json"
 
@@ -18,20 +28,24 @@ files = [
     "src/__init__.py",
     "src/Config.py",
     "src/controller/__init__.py",
+    "src/controller/game_over_controller.py",
     "src/controller/playing_controller.py",
     "src/controller/Start_screen_controller.py",
     "src/core/__init__.py",
     "src/core/Controller.py",
     "src/core/Core.py",
     "src/model/__init__.py",
+    "src/model/enemy_model.py",
     "src/model/map_model.py",
+    "src/model/npc_model.py",
     "src/model/player_model.py",
+    "src/model/projectile_model.py",
     "src/utils/__init__.py",
     "src/utils/camera.py",
-    "src/utils/manager_json.py",
     "src/utils/math_utils.py",
     "src/utils/resource_loader.py",
     "src/view/__init__.py",
+    "src/view/game_over_view.py",
     "src/view/playing_view.py",
     "src/view/Start_screen_view.py",
     "src/view/View.py"

@@ -12,7 +12,7 @@ class PlayerModel:
         self.hitbox.midbottom = self.rect.midbottom
         self.pos_x = float(self.hitbox.centerx)
         self.pos_y = float(self.hitbox.centery)
-        self.speed = 100.0
+        self.speed = 80.0
         self.direction = "down"
         self.is_moving = False
         self.max_health = 3

@@ -62,8 +62,8 @@ class MapModel:
                         self.overhead_entities.append((entity_name, x, y))
                     else:
                         match (r,g,b):
-                            case (  0,  0,  0):
-                                self.collision_grid[y][x] = True    #? PRETO: Parede
+                            case (  0,  0,  0):                     #? PRETO: Parede
+                                self.collision_grid[y][x] = True
                             case (  0,255,  0):                     #? VERDE: Spawn Jogador
                                 self.spawn_x = x * self.tile_size
                                 self.spawn_y = y * self.tile_size
@@ -74,8 +74,10 @@ class MapModel:
                                 self.transitions[coord_key] = self.transitions_targets[0]
                             case (255,255,  0):                     #? AMARELO: Item
                                 self.item_spawns.append((x,y))
-                            case (255,255,0):
-                                self.item_spawns.append((x,y))
+                            case (255,  0,255):                     #? ROSA: NPC
+                                print("npc")
+                                self.collision_grid[y][x] = True
+                                self.npc_spawns.append((x,y))
         except FileNotFoundError:
             print(f"[MapModel] Erro: Imagem de meta-dados '{meta_filename}' não encontrada.")
 

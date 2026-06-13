@@ -10,7 +10,7 @@ from src.view.playing_view import PlayingView
 from src.model.player_model import PlayerModel
 from src.model.enemy_model import EnemyModel
 from src.model.npc_model import NPCModel
-from src.model.projectile_mode import ProjectileModel
+from src.model.projectile_model import ProjectileModel
 from src.model.map_model import MapModel
 from src.utils.math_utils import normalize_vector
 from src.utils.camera import Camera
@@ -65,6 +65,12 @@ class PlayingController(Controller):
                                 if distance <= 50.0:
                                     npc.interact()
                                     break
+                        case PYG.K_LSHIFT:
+                            self.player_model.speed = 150.0
+                case PYG.KEYUP:
+                    match event.key:
+                        case PYG.K_LSHIFT:
+                            self.player_model.speed = 50.0
             if event.type == PYG.KEYDOWN and event.key == PYG.K_ESCAPE:
                 self.change_state(GameState.START_SCREEN)
             
