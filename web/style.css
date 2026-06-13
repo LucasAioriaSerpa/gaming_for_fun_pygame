@@ -1,21 +1,103 @@
-body {
-  font-family: system-ui, sans-serif;
-  max-width: 600px;
-  margin: auto;
-  padding: 1rem;
-  text-align: center;
+/* Variáveis para facilitar a mudança de cores e suporte a Dark Mode */
+:root {
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --accent-color: #6366f1;
+  --accent-gradient: linear-gradient(to right, #6366f1, #a855f7);
+  --canvas-border: #e2e8f0;
+  --canvas-shadow: rgba(0, 0, 0, 0.1);
 }
 
-.game {
+/* Modo Escuro Automático */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --canvas-border: #334155;
+    --canvas-shadow: rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Reset Básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.game-container {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* Moldura bonita para o Canvas */
+.canvas-wrapper {
+  background: var(--bg-color);
+  padding: 0.5rem;
+  border: 1px solid var(--canvas-border);
+  border-radius: 16px;
+  box-shadow:
+    0 10px 25px -5px var(--canvas-shadow),
+    0 8px 10px -6px var(--canvas-shadow);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.canvas-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 25px -5px var(--canvas-shadow),
+    0 10px 10px -5px var(--canvas-shadow);
+}
+
 #canvas {
-  border: 2px solid #333;
-  border-radius: 10px;
-  padding: 1rem;
+  display: block;
+  border-radius: 12px;
+  background-color: #000; /* Fundo padrão do canvas antes do jogo carregar */
   image-rendering: pixelated;
+  max-width: 100%;
+  height: auto;
 }
