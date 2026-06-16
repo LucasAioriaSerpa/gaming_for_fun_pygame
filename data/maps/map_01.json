@@ -2,6 +2,7 @@
   "meta_image": "start_area/map_01_meta.png",
   "visual_image": "start_area/map_01_draw.png",
   "entities_tileset": "start_area",
+  "background_music": "field_of_hopes_and_dreams.mp3",
   "color_to_entity": {
     "0,255,255": "tree_top"
   },

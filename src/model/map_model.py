@@ -10,6 +10,7 @@ class MapModel:
         self.tile_size = tile_size
         self.map_name = map_name
         self.collision_grid = []
+        self.cutscene_collision_grid = []
         self.transitions = {}
         self.enemy_spawns = []
         self.npc_spawns = []
@@ -32,6 +33,8 @@ class MapModel:
         self.entities_tileset = data.get("entities_tileset", "start_area")
         self.color_to_entity = data.get("color_to_entity", {})
         self.transitions_targets = data.get("transitions", [])
+        PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", data.get("background_music")))
+        PYG.mixer.music.set_volume(0.3)
         self._parse_meta_image(meta_image_path)
 
     def _parse_meta_image(self, meta_filename: str):
@@ -46,6 +49,7 @@ class MapModel:
                 self.height_tiles = meta_surf.get_height()
                 scale_up = True
             self.collision_grid = [[False for _ in range(self.width_tiles)] for _ in range(self.height_tiles)]
+            self.cutscene_collision_grid = [[False for _ in range(self.width_tiles)] for _ in range(self.height_tiles)]
             for y in range(self.height_tiles):
                 for x in range(self.width_tiles):
                     if scale_up:
@@ -75,15 +79,22 @@ class MapModel:
                             case (255,255,  0):                     #? AMARELO: Item
                                 self.item_spawns.append((x,y))
                             case (255,  0,255):                     #? ROSA: NPC
-                                print("npc")
                                 self.collision_grid[y][x] = True
                                 self.npc_spawns.append((x,y))
+                            case (255,255,255):                     #? BRANCO: Win
+                                self.collision_grid[y][x] = True
+                                self.cutscene_collision_grid[y][x] = True
         except FileNotFoundError:
             print(f"[MapModel] Erro: Imagem de meta-dados '{meta_filename}' não encontrada.")
 
     def is_wall(self, grid_x: int, grid_y: int) -> bool:
         if 0 <= grid_y < self.height_tiles and 0 <= grid_x < self.width_tiles:
             return self.collision_grid[grid_y][grid_x]
+        return True
+
+    def is_cutscrene_wall(self, grid_x: int, grid_y: int) -> bool:
+        if 0 <= grid_y < self.height_tiles and 0 <= grid_x < self.width_tiles:
+            return self.cutscene_collision[grid_y][grid_x]
         return True
 
     def get_tile_at(self, pixel_x:float,pixel_y:float)->str:

@@ -2,7 +2,7 @@
 import pygame as PYG
 import asyncio
 
-from src.Config import WINDOW_TITLE, SCREEN_SIZE, FPS, RESIZABLE, GameState
+from src.Config import CONTENT_DIR, WINDOW_TITLE, SCREEN_SIZE, FPS, RESIZABLE, GameState
 from src.controller.Start_screen_controller import StartScreenController
 from src.controller.playing_controller      import PlayingController
 from src.controller.game_over_controller    import GameOverController

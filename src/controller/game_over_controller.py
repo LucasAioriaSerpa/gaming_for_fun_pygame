@@ -3,10 +3,11 @@ from __future__ import annotations
 from typing import Callable
 
 import pygame as PYG
+import os
 
 from src.core.Controller import Controller
 from src.view.game_over_view import GameOverView
-from src.Config import GameState
+from src.Config import CONTENT_DIR, GameState
 
 class GameOverController(Controller):
     def __init__(
@@ -15,6 +16,11 @@ class GameOverController(Controller):
         change_state_cb: Callable[[str], None]
     ):
         super().__init__(screen, change_state_cb)
+        PYG.mixer.music.fadeout(3)
+        PYG.mixer.music.unload()
+        PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", "determination.mp3"))
+        PYG.mixer.music.set_volume(0.8)
+        PYG.mixer.music.play(loops=-1, fade_ms=5)
         self.view = GameOverView(screen)
         self._actions = {
             "Tentar Novamente": self._on_retry,

@@ -14,6 +14,7 @@ from src.model.projectile_model import ProjectileModel
 from src.model.map_model import MapModel
 from src.utils.math_utils import normalize_vector
 from src.utils.camera import Camera
+from src.ui.dialogSystem import DialogSystem
 
 class PlayingController(Controller):
     def __init__(
@@ -27,13 +28,16 @@ class PlayingController(Controller):
         self.enemies: List[EnemyModel] = []
         self.npcs: List[NPCModel] = []
         self.projectiles: List[ProjectileModel] = []
-        self.load_map("maps/map_01")
+        self.dialog_system = DialogSystem(self.screen)
+        self.load_map("maps/the_lost")
     
     def on_enter(self): self.__init__(self.screen, self.change_state)
     
     def trigger_game_over(self): self.change_state(GameState.GAME_OVER)
     
     def load_map(self, map_name: str):
+        PYG.mixer.music.fadeout(3)
+        PYG.mixer.music.unload()
         self.projectiles.clear()
         self.map_model = MapModel(map_name=map_name, tile_size=32)
         self.player_model = PlayerModel(
@@ -49,6 +53,7 @@ class PlayingController(Controller):
             self.npcs.append(NPCModel(x=nx * 32, y=ny * 32, size=32))
         self.camera.x = self.player_model.rect.centerx - (self.camera.width / 2)
         self.camera.y = self.player_model.rect.centery - (self.camera.height / 2)
+        PYG.mixer.music.play(loops=-1,fade_ms=5)
     
     def handle_events(self, events: List[PYG.event.Event]):
         for event in events:
@@ -58,13 +63,16 @@ class PlayingController(Controller):
                         case PYG.K_ESCAPE:
                             self.change_state(GameState.START_SCREEN)
                         case PYG.K_e:
-                            for npc in self.npcs:
-                                dx = self.player_model.hitbox.centerx - npc.hitbox.centerx
-                                dy = self.player_model.hitbox.centery - npc.hitbox.centery
-                                distance = math.hypot(dx, dy)
-                                if distance <= 50.0:
-                                    npc.interact()
-                                    break
+                            if self.dialog_system.active: self.dialog_system.advance()
+                            else:
+                                for npc in self.npcs:
+                                    dx = self.player_model.hitbox.centerx - npc.hitbox.centerx
+                                    dy = self.player_model.hitbox.centery - npc.hitbox.centery
+                                    distance = math.hypot(dx, dy)
+                                    if distance <= 50.0:
+                                        linhas_de_fala = npc.interact()
+                                        self.dialog_system.start_dialog(linhas_de_fala)
+                                        break
                         case PYG.K_LSHIFT:
                             self.player_model.speed = 150.0
                 case PYG.KEYUP:
@@ -75,7 +83,10 @@ class PlayingController(Controller):
                 self.change_state(GameState.START_SCREEN)
             
 
-    def update(self, delta_time: float): 
+    def update(self, delta_time: float):
+        if self.dialog_system.active:
+            self.dialog_system.update(delta_time)
+            return
         keys = PYG.key.get_pressed()
         dx, dy = 0.0,  0.0
         if keys[PYG.K_w] or keys[PYG.K_UP]:     dy -= 1.0
@@ -140,4 +151,13 @@ class PlayingController(Controller):
         self.enemies = [e for e in self.enemies if not e.ready_to_remove]
         self.view.update(delta_time, self.player_model, self.enemies)
 
-    def draw(self): self.view.draw(self.player_model, self.map_model, self.camera, self.enemies, self.projectiles, self.npcs)
+    def draw(self): 
+        self.view.draw(
+            self.player_model,
+            self.map_model,
+            self.camera,
+            self.enemies,
+            self.projectiles,
+            self.npcs
+        )
+        self.dialog_system.draw()
