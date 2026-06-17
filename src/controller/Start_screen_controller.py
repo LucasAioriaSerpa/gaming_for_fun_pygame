@@ -15,31 +15,35 @@ class StartScreenController(Controller):
         change_state_cb: Callable[[str], None]
     ):
         super().__init__(screen, change_state_cb)
-        PYG.mixer.music.fadeout(3)
-        PYG.mixer.music.unload()
-        PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", "another_him.mp3"))
-        PYG.mixer.music.set_volume(0.8)
-        PYG.mixer.music.play(loops=-1, fade_ms=5)
+        self.change_state_cb = change_state_cb
         self.view = StartScreenView(screen)
         self._buttons = {
             "Jogar": self._on_play,
             "Sair": self._on_quit
         }
         self.view.set_buttons(list(self._buttons.keys()))
-        
+        self.play_background_music()
+    
+    def play_background_music(self):
+        PYG.mixer.music.fadeout(3)
+        PYG.mixer.music.unload()
+        PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", "another_him.mp3"))
+        PYG.mixer.music.set_volume(0.8)
+        PYG.mixer.music.play(loops=-1, fade_ms=5)
+    
     def _on_play(self): self.change_state(GameState.PLAYING)
     
     def _on_quit(self): PYG.event.post(PYG.event.Event(PYG.QUIT))
     
+    def on_enter(self): self.__init__(self.screen, self.change_state_cb)
+    
     def handle_events(self, events: List[PYG.event.Event]):
         mouse_pos = PYG.mouse.get_pos()
         self.view.update_hover(mouse_pos)
-        
         for event in events:
             if event.type == PYG.MOUSEBUTTONDOWN and event.button == 1:
                 clicked = self.view.get_clicked_button(mouse_pos)
                 if clicked and clicked in self._buttons: self._buttons[clicked]()
-            
             if event.type == PYG.KEYDOWN:
                 if event.key == PYG.K_RETURN: self._on_play()
                 elif event.key == PYG.K_ESCAPE: self._on_quit()

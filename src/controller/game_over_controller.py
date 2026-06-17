@@ -16,23 +16,27 @@ class GameOverController(Controller):
         change_state_cb: Callable[[str], None]
     ):
         super().__init__(screen, change_state_cb)
-        PYG.mixer.music.fadeout(3)
-        PYG.mixer.music.unload()
-        PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", "determination.mp3"))
-        PYG.mixer.music.set_volume(0.8)
-        PYG.mixer.music.play(loops=-1, fade_ms=5)
+        self.change_state_cb = change_state_cb
         self.view = GameOverView(screen)
         self._actions = {
             "Tentar Novamente": self._on_retry,
             "Menu Principal": self._on_menu
         }
         self.view.set_buttons(list(self._actions.keys()))
+        self._play_background_music()
+
+    def _play_background_music(self):
+        PYG.mixer.music.fadeout(3)
+        PYG.mixer.music.unload()
+        PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", "determination.mp3"))
+        PYG.mixer.music.set_volume(0.8)
+        PYG.mixer.music.play(loops=-1, fade_ms=5)
 
     def _on_retry(self): self.change_state(GameState.PLAYING)
     
     def _on_menu(self): self.change_state(GameState.START_SCREEN)
 
-    def on_enter(self): self.view.reset()
+    def on_enter(self): self.__init__(self.screen, self.change_state_cb); self.view.reset()
 
     def handle_events(self, events: list[PYG.event.Event]):
         for event in events:

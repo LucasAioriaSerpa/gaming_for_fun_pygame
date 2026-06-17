@@ -1,8 +1,9 @@
 {
   "meta_image": "the_lost_one/lost_one_meta_data.png",
   "visual_image": "the_lost_one/lost_one_draw.png",
-  "entities_tileset": "start_area",
   "background_music": "lost_girl_deltarune.mp3",
+  "npcs": ["cat.json"],
+  "entities_tileset": "start_area",
   "color_to_entity": {
     "0,255,255": "tree_top"
   },

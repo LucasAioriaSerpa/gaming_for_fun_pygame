@@ -16,11 +16,13 @@ class DialogSystem:
         self.state = "IDLE"     #? Estados: IDLE, TYPING, WAITING
         self.box_height = 160
         self.margin = 20
-        self.sfx_voice = PYG.Sound(os.path.join(CONTENT_DIR, "sound", "meow-1.mp3"))
-        self.sfx_voice.set_volume(0.5)
+        self.sfx_voice = PYG.Sound(os.path.join(CONTENT_DIR, "sound", "meow-talk.wav"))
         self.font = PYG.font.Font(os.path.join(CONTENT_DIR, "font", "KiwiSoda.ttf"), size=28) 
 
-    def start_dialog(self, lines: list[str]):
+    def start_dialog(self, font: PYG.font.Font, sfx_voice: PYG.Sound, lines: list[str]):
+        self.font = font
+        self.sfx_voice = sfx_voice
+        self.sfx_voice.set_volume(0.5)
         if not lines: return
         self.lines = lines
         self.current_line_idx = 0
@@ -50,6 +52,7 @@ class DialogSystem:
         if self.char_timer >= self.char_delay:
             self.char_timer = 0.0
             self.current_char_idx += 1
+            self.sfx_voice.play()
             if self.current_char_idx >= len(self.lines[self.current_line_idx]):
                 self.current_char_idx = len(self.lines[self.current_line_idx])
                 self.state = "WAITING"
@@ -67,7 +70,6 @@ class DialogSystem:
             words = display_text.split('\n')
             for i, line in enumerate(words):
                 text_surf = self.font.render(line, True, (255, 255, 255))
-                self.sfx_voice.play()
                 self.screen.blit(text_surf, (box_rect.x + 25, box_rect.y + 25 + (i * 35)))
             if self.state == "WAITING":
                 indicator = self.font.render(">", True, (255, 255, 255))

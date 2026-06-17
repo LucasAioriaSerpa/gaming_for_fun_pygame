@@ -1,7 +1,7 @@
-import json
-import os
 
 import pygame as PYG
+import json
+import os
 
 from src.Config import DATA_DIR, CONTENT_DIR
 
@@ -13,6 +13,7 @@ class MapModel:
         self.cutscene_collision_grid = []
         self.transitions = {}
         self.enemy_spawns = []
+        self.npcs = []
         self.npc_spawns = []
         self.item_spawns = []
         self.overhead_entities = []
@@ -30,6 +31,7 @@ class MapModel:
             data = json.load(f)
         meta_image_path = data.get("meta_image")
         self.visual_image_path = data.get("visual_image")
+        self.npcs = data.get("npcs")
         self.entities_tileset = data.get("entities_tileset", "start_area")
         self.color_to_entity = data.get("color_to_entity", {})
         self.transitions_targets = data.get("transitions", [])
@@ -94,7 +96,7 @@ class MapModel:
 
     def is_cutscrene_wall(self, grid_x: int, grid_y: int) -> bool:
         if 0 <= grid_y < self.height_tiles and 0 <= grid_x < self.width_tiles:
-            return self.cutscene_collision[grid_y][grid_x]
+            return self.cutscene_collision_grid[grid_y][grid_x]
         return True
 
     def get_tile_at(self, pixel_x:float,pixel_y:float)->str:

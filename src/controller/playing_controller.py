@@ -50,7 +50,7 @@ class PlayingController(Controller):
             self.enemies.append(EnemyModel(x=ex * 32, y=ey * 32, size=32))
         self.npcs.clear()
         for nx, ny in self.map_model.npc_spawns:
-            self.npcs.append(NPCModel(x=nx * 32, y=ny * 32, size=32))
+            self.npcs.append(NPCModel(self.map_model.npcs[0], x=nx * 32, y=ny * 32, size=32))
         self.camera.x = self.player_model.rect.centerx - (self.camera.width / 2)
         self.camera.y = self.player_model.rect.centery - (self.camera.height / 2)
         PYG.mixer.music.play(loops=-1,fade_ms=5)
@@ -60,8 +60,7 @@ class PlayingController(Controller):
             match event.type:
                 case PYG.KEYDOWN:
                     match event.key:
-                        case PYG.K_ESCAPE:
-                            self.change_state(GameState.START_SCREEN)
+                        case PYG.K_ESCAPE: self.change_state(GameState.START_SCREEN)
                         case PYG.K_e:
                             if self.dialog_system.active: self.dialog_system.advance()
                             else:
@@ -70,18 +69,17 @@ class PlayingController(Controller):
                                     dy = self.player_model.hitbox.centery - npc.hitbox.centery
                                     distance = math.hypot(dx, dy)
                                     if distance <= 50.0:
+                                        font = npc.font_voice
+                                        sfx_voice = npc.sfx_voice
                                         linhas_de_fala = npc.interact()
-                                        self.dialog_system.start_dialog(linhas_de_fala)
+                                        self.dialog_system.start_dialog(font, sfx_voice, linhas_de_fala)
                                         break
-                        case PYG.K_LSHIFT:
-                            self.player_model.speed = 150.0
+                        case PYG.K_LSHIFT: self.player_model.speed = 150.0
                 case PYG.KEYUP:
                     match event.key:
-                        case PYG.K_LSHIFT:
-                            self.player_model.speed = 50.0
+                        case PYG.K_LSHIFT: self.player_model.speed = 50.0
             if event.type == PYG.KEYDOWN and event.key == PYG.K_ESCAPE:
                 self.change_state(GameState.START_SCREEN)
-            
 
     def update(self, delta_time: float):
         if self.dialog_system.active:
