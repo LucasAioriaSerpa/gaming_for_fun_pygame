@@ -1,17 +1,17 @@
 
 from __future__ import annotations
-
 from dataclasses import dataclass
 from collections import namedtuple as nTuple
 import pygame as PYG
 import random
 import math
+import os
 
 from src.view.View import View
 from src.Config import (
     Colors, WINDOW_TITLE,
     FONT_SIZE_TITLE, FONT_SIZE_LARGE, FONT_SIZE_SMALL,
-    SCREEN_SIZE
+    SCREEN_SIZE, CONTENT_DIR
 )
 
 @dataclass
@@ -95,13 +95,16 @@ class StartScreenView(View):
 
     def get_clicked_button(self, mouse_pos: tuple[int, int]) -> str | None:
         for label, rect in self._btn_rects.items():
-            if rect.collidepoint(mouse_pos): return label
+            if rect.collidepoint(mouse_pos): 
+                PYG.mixer.Channel.play(PYG.mixer.Channel(0), PYG.mixer.Sound(os.path.join(CONTENT_DIR, "sound", "savepoint.mp3")))
+                return label
         return None
 
     def update_hover(self, mouse_pos: tuple[int, int]):
         self._hovered = None
         for label, rect in self._btn_rects.items():
-            if rect.collidepoint(mouse_pos): 
+            if rect.collidepoint(mouse_pos):
+                PYG.mixer.Channel.play(PYG.mixer.Channel(0), PYG.mixer.Sound(os.path.join(CONTENT_DIR, "sound", "sqek.mp3")))
                 self._hovered = label
                 return label
         return None

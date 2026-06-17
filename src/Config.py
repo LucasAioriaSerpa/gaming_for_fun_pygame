@@ -41,6 +41,8 @@ class GameState:
     PLAYING      = "playing"
     PAUSED       = "paused"
     GAME_OVER    = "game_over"
+    CUTSCENE     = "cutscene"
+    CREDITS      = "credits"
 
 FONT_SIZE_TITLE  = 72
 FONT_SIZE_LARGE  = 48

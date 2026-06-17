@@ -1,0 +1,28 @@
+{
+  "title": "CRÉDITOS",
+  "sections": [
+    {
+      "title": "DESENVOLVIMENTO",
+      "names": ["Lucas Aioria Serpa"]
+    },
+    {
+      "title": "DESIGN DE JOGO & ROTEIRO",
+      "names": ["Lucas Aioria Serpa"]
+    },
+    {
+      "title": "ARTE & ASSETS",
+      "names": ["Asesprite", "OpenGameArt Community"]
+    },
+    {
+      "title": "TRILHA SONORA & SFX",
+      "names": [
+        "Deltarune - Tobias Raposa & Temmie-chan",
+        "Undertale - Tobias Raposa & Temmie-chan"
+      ]
+    },
+    {
+      "title": "AGRADECIMENTOS ESPECIAIS",
+      "names": ["Comunidade Pygame", "Mi-san-Go", "Você, por jogar! :3"]
+    }
+  ]
+}

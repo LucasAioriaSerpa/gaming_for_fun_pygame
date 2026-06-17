@@ -1,4 +1,3 @@
-
 import pygame as PYG
 import json
 import os
@@ -10,13 +9,13 @@ class MapModel:
         self.tile_size = tile_size
         self.map_name = map_name
         self.collision_grid = []
-        self.cutscene_collision_grid = []
         self.transitions = {}
         self.enemy_spawns = []
         self.npcs = []
         self.npc_spawns = []
         self.item_spawns = []
         self.overhead_entities = []
+        self.cutscene_triggers = [] 
         self.spawn_x = 0.0
         self.spawn_y = 0.0
         self.width_tiles = 0
@@ -45,13 +44,14 @@ class MapModel:
             meta_surf = PYG.image.load(full_path).convert_alpha()
             self.width_tiles  = meta_surf.get_width()  // self.tile_size
             self.height_tiles = meta_surf.get_height() // self.tile_size
-            if self.width_tiles != 0 or self.height_tiles != 0: scale_up = False
+            if self.width_tiles != 0 or self.height_tiles != 0: 
+                scale_up = False
             else:
                 self.width_tiles = meta_surf.get_width()
                 self.height_tiles = meta_surf.get_height()
                 scale_up = True
             self.collision_grid = [[False for _ in range(self.width_tiles)] for _ in range(self.height_tiles)]
-            self.cutscene_collision_grid = [[False for _ in range(self.width_tiles)] for _ in range(self.height_tiles)]
+            
             for y in range(self.height_tiles):
                 for x in range(self.width_tiles):
                     if scale_up:
@@ -60,32 +60,32 @@ class MapModel:
                     else:
                         pixel_x = (x * self.tile_size) + (self.tile_size // 2)
                         pixel_y = (y * self.tile_size) + (self.tile_size // 2)
-                    r,g,b, a = meta_surf.get_at((pixel_x,pixel_y))
+                    r, g, b, a = meta_surf.get_at((pixel_x, pixel_y))
                     if a == 0: continue
                     color_str = f"{r},{g},{b}"
                     if color_str in self.color_to_entity:
                         entity_name = self.color_to_entity[color_str]
                         self.overhead_entities.append((entity_name, x, y))
                     else:
-                        match (r,g,b):
-                            case (  0,  0,  0):                     #? PRETO: Parede
+                        match (r, g, b):
+                            case (0, 0, 0):         #? PRETO: Parede
                                 self.collision_grid[y][x] = True
-                            case (  0,255,  0):                     #? VERDE: Spawn Jogador
+                            case (0, 255, 0):       #? VERDE: Spawn Jogador
                                 self.spawn_x = x * self.tile_size
                                 self.spawn_y = y * self.tile_size
-                            case (255,  0,  0): 
-                                self.enemy_spawns.append((x,y))     #? VERMELHO: Inimigo
-                            case (  0,  0,255):                     #? AZUL: Transição
+                            case (255, 0, 0):       #? VERMELHO: Inimigo
+                                self.enemy_spawns.append((x, y))
+                            case (0, 0, 255):       #? AZUL: Transição
                                 coord_key = f"{x},{y}"
                                 self.transitions[coord_key] = self.transitions_targets[0]
-                            case (255,255,  0):                     #? AMARELO: Item
-                                self.item_spawns.append((x,y))
-                            case (255,  0,255):                     #? ROSA: NPC
+                            case (255, 255, 0):     #? AMARELO: Item
+                                self.item_spawns.append((x, y))
+                            case (255, 0, 255):     #? ROSA: NPC
                                 self.collision_grid[y][x] = True
-                                self.npc_spawns.append((x,y))
-                            case (255,255,255):                     #? BRANCO: Win
+                                self.npc_spawns.append((x, y))
+                            case (255, 255, 255):   #? BRANCO: Win / Cutscene
                                 self.collision_grid[y][x] = True
-                                self.cutscene_collision_grid[y][x] = True
+                                self.cutscene_triggers.append((x * self.tile_size, y * self.tile_size))
         except FileNotFoundError:
             print(f"[MapModel] Erro: Imagem de meta-dados '{meta_filename}' não encontrada.")
 
@@ -94,12 +94,7 @@ class MapModel:
             return self.collision_grid[grid_y][grid_x]
         return True
 
-    def is_cutscrene_wall(self, grid_x: int, grid_y: int) -> bool:
-        if 0 <= grid_y < self.height_tiles and 0 <= grid_x < self.width_tiles:
-            return self.cutscene_collision_grid[grid_y][grid_x]
-        return True
-
-    def get_tile_at(self, pixel_x:float,pixel_y:float)->str:
+    def get_tile_at(self, pixel_x: float, pixel_y: float) -> str:
         grid_x = int(pixel_x // self.tile_size)
         grid_y = int(pixel_y // self.tile_size)
         return f"{grid_x},{grid_y}"

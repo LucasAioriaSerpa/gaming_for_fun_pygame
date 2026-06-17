@@ -6,11 +6,18 @@ from src.Config import CONTENT_DIR, WINDOW_TITLE, SCREEN_SIZE, FPS, RESIZABLE, G
 from src.controller.Start_screen_controller import StartScreenController
 from src.controller.playing_controller      import PlayingController
 from src.controller.game_over_controller    import GameOverController
+from src.controller.cutscene_controller     import CutSceneController
+from src.controller.credits_constroller     import CreditsController
 
 class Core:
     def __init__(self):
         PYG.init()
         PYG.mixer.init()
+        PYG.mixer.Channel(0) #* Button Select / Button Click
+        PYG.mixer.Channel(1) #* attaque
+        PYG.mixer.Channel(2) #* attaque inimigo
+        PYG.mixer.Channel(3) #* Dano Jogador
+        PYG.mixer.Channel(4) #* Dano Inimigo
         flags = PYG.RESIZABLE if RESIZABLE else 0
         self.screen = PYG.display.set_mode(tuple(SCREEN_SIZE), flags)
         PYG.display.set_caption(WINDOW_TITLE)
@@ -22,11 +29,19 @@ class Core:
     
     def _load_controllers(self):
         self._controllers = {
-            GameState.PLAYING: PlayingController(
+            GameState.CREDITS: CreditsController(
+                screen=self.screen,
+                change_state_cb=self.change_state   
+            ),
+            GameState.CUTSCENE: CutSceneController(
                 screen=self.screen,
                 change_state_cb=self.change_state
             ),
             GameState.GAME_OVER: GameOverController(
+                screen=self.screen,
+                change_state_cb=self.change_state
+            ),
+            GameState.PLAYING: PlayingController(
                 screen=self.screen,
                 change_state_cb=self.change_state
             ),
