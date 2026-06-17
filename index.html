@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Meu jogo em PyScript" />
+    <title>The Game</title>
+
+    <link
+      rel="stylesheet"
+      href="https://pyscript.net/releases/2026.3.1/core.css"
+    />
+    <script
+      type="module"
+      src="https://pyscript.net/releases/2026.3.1/core.js"
+    ></script>
+
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>The Great Test</h1>
+      <p class="subtitle">Prepare-se para jogar</p>
+    </header>
+
+    <main class="game-container">
+      <div class="canvas-wrapper">
+        <canvas id="canvas"></canvas>
+        <script
+          type="py-game"
+          async
+          src="./Web_Execute_me.py"
+          config="./pyscript.toml"
+        ></script>
+      </div>
+    </main>
+  </body>
+</html>
