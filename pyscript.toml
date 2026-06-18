@@ -36,7 +36,7 @@
 "./data/maps/map_01.json"   = "data/maps/map_01.json"
 "./data/maps/map_02.json"   = "data/maps/map_02.json"
 "./data/maps/the_lost.json" = "data/maps/the_lost.json"
-"./data/npcs/cat.json"      = "data/cat/npcs/cat.json"
+"./data/npcs/cat.json"      = "data/npcs/cat.json"
 "./data/credits.json"       = "data/credits.json"
 
 [[fetch]]

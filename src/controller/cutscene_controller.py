@@ -43,7 +43,7 @@ class CutSceneController(Controller):
         self.view.load_background(self.bg_image_path)
         self.dialog_system.start_dialog(
             PYG.font.Font(os.path.join(CONTENT_DIR, "font", "Mojang-Bold.ttf"), size=28),
-            PYG.Sound(os.path.join(CONTENT_DIR, "Sound", "voice_talking.wav")),
+            PYG.Sound(os.path.join(CONTENT_DIR, "sound", "voice_talking.wav")),
             self.dialog_lines
         )
 
