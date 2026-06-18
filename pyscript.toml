@@ -1,5 +1,6 @@
 
 [files]
+"./content/cutscene/cutscene.png"                          = "content/cutscene/cutscene.png"
 "./content/enemy/animations/attack/enemy_attack.gif"       = "content/enemy/animations/attack/enemy_attack.gif"
 "./content/enemy/animations/death/enemy_death.gif"         = "content/enemy/animations/death/enemy_death.gif"
 "./content/enemy/animations/idle/enemy_idle.gif"           = "content/enemy/animations/idle/enemy_idle.gif"
