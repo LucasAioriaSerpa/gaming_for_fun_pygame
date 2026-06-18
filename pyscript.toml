@@ -4,21 +4,40 @@
 "./content/enemy/animations/death/enemy_death.gif"         = "content/enemy/animations/death/enemy_death.gif"
 "./content/enemy/animations/idle/enemy_idle.gif"           = "content/enemy/animations/idle/enemy_idle.gif"
 "./content/enemy/animations/walk/enemy_walk.gif"           = "content/enemy/animations/walk/enemy_walk.gif"
+"./content/font/8-bit_Arcade_In.ttf"                       = "content/font/8-bit_Arcade_In.ttf"
+"./content/font/KiwiSoda.ttf"                              = "content/font/KiwiSoda.ttf"
+"./content/font/Mojang-Bold.ttf"                           = "content/font/Mojang-Bold.ttf"
 "./content/interfaces/heart/heart_spreedsheet.png"         = "content/interfaces/heart/heart_spreedsheet.png"
 "./content/maps/start_area/tile_set/start_area.png"        = "content/maps/start_area/tile_set/start_area.png"
 "./content/maps/start_area/map_01_draw.png"                = "content/maps/start_area/map_01_draw.png"
 "./content/maps/start_area/map_01_meta.png"                = "content/maps/start_area/map_01_meta.png"
 "./content/maps/start_area/map_02_draw.png"                = "content/maps/start_area/map_02_draw.png"
 "./content/maps/start_area/map_02_meta.png"                = "content/maps/start_area/map_02_meta.png"
+"./content/maps/the_lost_one/lost_one_draw.png"            = "content/maps/the_lost_one/lost_one_draw.png"
+"./content/maps/the_lost_one/lost_one_meta.png"            = "content/maps/the_lost_one/lost_one_meta.png"
 "./content/player/animations/walk/player_walk_down.gif"    = "content/player/animations/walk/player_walk_down.gif"
 "./content/player/animations/walk/player_walk_left.gif"    = "content/player/animations/walk/player_walk_left.gif"
 "./content/player/animations/walk/player_walk_right.gif"   = "content/player/animations/walk/player_walk_right.gif"
 "./content/player/animations/walk/player_walk_up.gif"      = "content/player/animations/walk/player_walk_up.gif"
 "./content/player/images/player.png"                       = "content/player/images/player.png"
-"./content/maps/test/tile_set/floor.png"                 = "content/maps/test/tile_set/floor.png"
-"./content/maps/test/tile_set/wall.png"                  = "content/maps/test/tile_set/wall.png"
-"./data/maps/map_01.json"  = "data/maps/map_01.json"
-"./data/maps/map_02.json"  = "data/maps/map_02.json"
+"./content/maps/test/tile_set/floor.png"                   = "content/maps/test/tile_set/floor.png"
+"./content/maps/test/tile_set/wall.png"                    = "content/maps/test/tile_set/wall.png"
+"./content/sound/meow-talk.wav"                            = "content/sound/meow-talk.wav"
+"./content/sound/savepoint.mp3"                            = "content/sound/savepoint.mp3"
+"./content/sound/sqek.mp3"                                 = "content/sound/sqek.mp3"
+"./content/sound/voice_talking.wav"                        = "content/sound/voice_talking.wav"
+"./content/sound/music/another_him.mp3"                    = "content/sound/music/another_him.mp3"
+"./content/sound/music/determination.mp3"                  = "content/sound/music/determination.mp3"
+"./content/sound/music/dogSong.mp3"                        = "content/sound/music/dogSong.mp3"
+"./content/sound/music/dontForget_musicBox.mp3"            = "content/sound/music/dontForget_musicBox.mp3"
+"./content/sound/music/field_of_hopes_and_dreams.mp3"      = "content/sound/music/field_of_hopes_and_dreams.mp3"
+"./content/sound/music/lost_girl_deltarune.mp3"            = "content/sound/music/lost_girl_deltarune.mp3"
+"./content/sound/music/minecraft_but_is_midwest_emo.mp3"   = "content/sound/music/minecraft_but_is_midwest_emo.mp3"
+"./data/maps/map_01.json"   = "data/maps/map_01.json"
+"./data/maps/map_02.json"   = "data/maps/map_02.json"
+"./data/maps/the_lost.json" = "data/maps/the_lost.json"
+"./data/npcs/cat.json"      = "data/cat/npcs/cat.json"
+"./data/credits.json"       = "data/credits.json"
 
 [[fetch]]
 from = "."
@@ -28,6 +47,8 @@ files = [
     "src/__init__.py",
     "src/Config.py",
     "src/controller/__init__.py",
+    "src/controller/credits_constroller.py",
+    "src/controller/cutscene_controller.py",
     "src/controller/game_over_controller.py",
     "src/controller/playing_controller.py",
     "src/controller/Start_screen_controller.py",
@@ -40,11 +61,15 @@ files = [
     "src/model/npc_model.py",
     "src/model/player_model.py",
     "src/model/projectile_model.py",
+    "src/ui/__init__.py",
+    "src/ui/dialogSystem.py"
     "src/utils/__init__.py",
     "src/utils/camera.py",
     "src/utils/math_utils.py",
     "src/utils/resource_loader.py",
     "src/view/__init__.py",
+    "src/view/credits_view.py",
+    "src/view/cutscene_view.py",
     "src/view/game_over_view.py",
     "src/view/playing_view.py",
     "src/view/Start_screen_view.py",
