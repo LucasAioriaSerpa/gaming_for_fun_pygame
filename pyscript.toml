@@ -62,7 +62,7 @@ files = [
     "src/model/player_model.py",
     "src/model/projectile_model.py",
     "src/ui/__init__.py",
-    "src/ui/dialogSystem.py"
+    "src/ui/dialogSystem.py",
     "src/utils/__init__.py",
     "src/utils/camera.py",
     "src/utils/math_utils.py",
