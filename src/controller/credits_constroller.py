@@ -23,7 +23,6 @@ class CreditsController(Controller):
 
     def _play_background_music(self):
         PYG.mixer.music.fadeout(3)
-        print(PYG.mixer.music.get_pos)
         PYG.mixer.music.unload()
         PYG.mixer.music.load(os.path.join(CONTENT_DIR, "sound", "music", "dogSong.mp3"))
         PYG.mixer.music.set_volume(1)
