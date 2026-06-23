@@ -29,7 +29,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='TheGame',          # O nome do teu ficheiro .exe final
+    name='TheFall',          # O nome do teu ficheiro .exe final
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -51,5 +51,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='TheGame',          # O nome da pasta final dentro de "dist/" onde o jogo vai ficar
+    name='TheFall',          # O nome da pasta final dentro de "dist/" onde o jogo vai ficar
 )

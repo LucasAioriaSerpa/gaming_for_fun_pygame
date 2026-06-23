@@ -1,4 +1,5 @@
-('/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/build/exe/TheGame.pkg',
+('C:\\Users\\Marcos '
+ 'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\TheGame.pkg',
  {'BINARY': True,
   'DATA': True,
   'EXECUTABLE': True,
@@ -10,36 +11,49 @@
   'SYMLINK': False},
  [('pyi-contents-directory _internal', '', 'OPTION'),
   ('PYZ-00.pyz',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/build/exe/PYZ-00.pyz',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\PYZ-00.pyz',
    'PYZ'),
   ('struct',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/build/exe/localpycs/struct.pyc',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\localpycs\\struct.pyc',
    'PYMODULE'),
   ('pyimod01_archive',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/build/exe/localpycs/pyimod01_archive.pyc',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\localpycs\\pyimod01_archive.pyc',
    'PYMODULE'),
   ('pyimod02_importers',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/build/exe/localpycs/pyimod02_importers.pyc',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\localpycs\\pyimod02_importers.pyc',
    'PYMODULE'),
   ('pyimod03_ctypes',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/build/exe/localpycs/pyimod03_ctypes.pyc',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\localpycs\\pyimod03_ctypes.pyc',
+   'PYMODULE'),
+  ('pyimod04_pywin32',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\build\\exe\\localpycs\\pyimod04_pywin32.pyc',
    'PYMODULE'),
   ('pyiboot01_bootstrap',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/.venv/lib/python3.14/site-packages/PyInstaller/loader/pyiboot01_bootstrap.py',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\.venv\\Lib\\site-packages\\PyInstaller\\loader\\pyiboot01_bootstrap.py',
    'PYSOURCE'),
   ('pyi_rth_inspect',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/.venv/lib/python3.14/site-packages/PyInstaller/hooks/rthooks/pyi_rth_inspect.py',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_inspect.py',
    'PYSOURCE'),
   ('pyi_rth_pkgutil',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/.venv/lib/python3.14/site-packages/PyInstaller/hooks/rthooks/pyi_rth_pkgutil.py',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pkgutil.py',
    'PYSOURCE'),
   ('pyi_rth_multiprocessing',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/.venv/lib/python3.14/site-packages/PyInstaller/hooks/rthooks/pyi_rth_multiprocessing.py',
+   'C:\\Users\\Marcos '
+   'Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\.venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_multiprocessing.py',
    'PYSOURCE'),
   ('exe',
-   '/home/garudaakuma/Documents/GitHub/gaming_for_fun_pygame/exe.py',
+   'C:\\Users\\Marcos Serpa\\Documents\\GitHub\\gaming_for_fun_pygame\\exe.py',
    'PYSOURCE')],
- 'libpython3.14.so.1.0',
+ 'python313.dll',
  True,
  False,
  False,
